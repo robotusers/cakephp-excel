@@ -1,0 +1,6 @@
+~*
+/tmp/*
+/vendor
+/composer.lock
+/nbproject
+/phpunit.xml

@@ -1,1 +1,1 @@
-# cakephp-excel
+# CakePHP Excel plugin
