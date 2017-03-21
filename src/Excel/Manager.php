@@ -33,6 +33,7 @@ use PHPExcel_Cell;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_CSV;
 use PHPExcel_Reader_IReader;
+use PHPExcel_Style_NumberFormat;
 use PHPExcel_Worksheet;
 use PHPExcel_Worksheet_Row;
 use PHPExcel_Writer_IWriter;
@@ -93,6 +94,9 @@ class Manager
 
                 $value = $cell->getValue();
                 if (in_array($property, $columns) && $value !== null) {
+                    $format = $cell->getStyle()->getNumberFormat()->getFormatCode();
+                    $value = PHPExcel_Style_NumberFormat::toFormattedString($value, $format);
+
                     $data[$property] = $value;
 
                     $hasData = true;
