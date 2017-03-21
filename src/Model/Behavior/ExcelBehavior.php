@@ -80,9 +80,7 @@ class ExcelBehavior extends Behavior
         'finder' => 'all',
         'finderOptions' => [],
         'marshallerOptions' => [],
-        'saveOptions' => [],
-        'file' => null,
-        'updateFile' => false
+        'saveOptions' => []
     ];
 
     /**
@@ -101,27 +99,6 @@ class ExcelBehavior extends Behavior
 
         if (!isset($config['propertyMap'])) {
             $config['propertyMap'] = array_flip($this->getConfig('columnMap'));
-        }
-
-        $events = $this->getConfig('updateFile');
-        if ($events) {
-            foreach ((array)$events as $event) {
-                $this->_table->eventManager()->on($event, [$this, 'handleUpdateFile']);
-            }
-        }
-    }
-
-    /**
-     *
-     * @param Event $event
-     * @param EntityInterface $entity
-     * @param ArrayObject $options
-     * @return void
-     */
-    public function handleUpdateFile(Event $event, EntityInterface $entity, ArrayObject $options)
-    {
-        if ($this->file && (!isset($options['updateFile']) || $options['updateFile'])) {
-            $this->writeExcel();
         }
     }
 
