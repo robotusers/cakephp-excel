@@ -22,7 +22,9 @@ $findRoot = function ($root) {
 $root = $findRoot(__FILE__);
 unset($findRoot);
 
+define('ROOT', $root);
 chdir($root);
+
 if (file_exists($root . '/config/bootstrap.php')) {
     require $root . '/config/bootstrap.php';
 }
