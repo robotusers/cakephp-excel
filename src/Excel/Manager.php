@@ -28,12 +28,14 @@ namespace Robotusers\Excel\Excel;
 use Cake\Datasource\EntityInterface;
 use Cake\Filesystem\File;
 use Cake\ORM\Table;
+use DateTimeInterface;
 use PHPExcel;
 use PHPExcel_Cell;
+use PHPExcel_Cell_DataType;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_CSV;
 use PHPExcel_Reader_IReader;
-use PHPExcel_Style_NumberFormat;
+use PHPExcel_Shared_Date;
 use PHPExcel_Worksheet;
 use PHPExcel_Worksheet_Row;
 use PHPExcel_Writer_IWriter;
@@ -91,11 +93,7 @@ class Manager
 
                 $value = $cell->getValue();
                 if (in_array($property, $columns) && $value !== null) {
-                    $format = $cell->getStyle()->getNumberFormat()->getFormatCode();
-                    $value = PHPExcel_Style_NumberFormat::toFormattedString($value, $format);
-
-                    $data[$property] = $value;
-
+                    $data[$property] = $cell->getFormattedValue();
                     $hasData = true;
                 }
             }
@@ -173,14 +171,33 @@ class Manager
 
                 $coords = $column . $row;
                 $cell = $worksheet->getCell($coords);
-
-                $cell->setValue($value);
+                $this->setCellValue($cell, $value);
             }
 
             $row++;
         }
 
         return $worksheet;
+    }
+
+    /**
+     *
+     * @param PHPExcel_Cell $cell
+     * @param mixed $value
+     * @return void
+     */
+    protected function setCellValue(PHPExcel_Cell $cell, $value)
+    {
+        if ($value instanceof DateTimeInterface) {
+            $value = PHPExcel_Shared_Date::PHPToExcel($value);
+        }
+        $cell->setValue($value);
+        if (is_numeric($value)) {
+            $cell->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+        }
+        if (is_bool($value)) {
+            $cell->setDataType(PHPExcel_Cell_DataType::TYPE_BOOL);
+        }
     }
 
     /**

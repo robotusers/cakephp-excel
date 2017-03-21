@@ -99,21 +99,10 @@ class Factory
         foreach ($cells as $cell) {
             /* @var $cell PHPExcel_Cell */
 
-            $format = $cell->getStyle()->getNumberFormat()->getFormatCode();
-            $dataType = $cell->getDataType();
-            $column = $cell->getColumn();
-
-            if (isset($options['columnTypeMap'][$column])) {
-                $type = $options['columnTypeMap'][$column];
-            } elseif (isset($options['numberFormatMap'][$format])) {
-                $type = $options['numberFormatMap'][$format];
-            } elseif (isset($options['dataTypeMap'][$dataType])) {
-                $type = $options['dataTypeMap'][$dataType];
-            } else {
-                $type = $options['defaultType'];
-            }
+            $type = $this->discoverType($cell, $options);
 
             if ($type !== false) {
+                $column = $cell->getColumn();
                 if (isset($options['columnMap'][$column])) {
                     $column = $options['columnMap'][$column];
                 }
@@ -122,6 +111,31 @@ class Factory
         }
 
         return $schema;
+    }
+
+    /**
+     *
+     * @param PHPExcel_Cell $cell
+     * @param array $options
+     * @return array|string|false
+     */
+    protected function discoverType(PHPExcel_Cell $cell, array $options)
+    {
+        $format = $cell->getStyle()->getNumberFormat()->getFormatCode();
+        $dataType = $cell->getDataType();
+        $column = $cell->getColumn();
+
+        if (isset($options['columnTypeMap'][$column])) {
+            $type = $options['columnTypeMap'][$column];
+        } elseif (isset($options['numberFormatMap'][$format])) {
+            $type = $options['numberFormatMap'][$format];
+        } elseif (isset($options['dataTypeMap'][$dataType])) {
+            $type = $options['dataTypeMap'][$dataType];
+        } else {
+            $type = $options['defaultType'];
+        }
+
+        return $type;
     }
 
     /**
