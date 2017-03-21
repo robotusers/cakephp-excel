@@ -25,6 +25,7 @@
 
 namespace Robotusers\Excel;
 
+use Cake\Database\Connection;
 use Cake\Datasource\ConnectionInterface;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
@@ -53,6 +54,12 @@ class Registry
      * @var Manager
      */
     protected $manager;
+
+    /**
+     *
+     * @var Connection
+     */
+    protected $connection;
 
     /**
      *
@@ -88,9 +95,10 @@ class Registry
      * @param string|File $file
      * @param string $sheet
      * @param array $options
+     * @param array $locatorOptions
      * @return Sheet
      */
-    public function get($file, $sheet = null, array $options = [])
+    public function get($file, $sheet = null, array $options = [], array $locatorOptions = [])
     {
         if (!$file instanceof File) {
             $file = new File($file);
@@ -108,7 +116,10 @@ class Registry
         $sheetId = $excel->getIndex($worksheet);
 
         if (!isset($this->sheets[$hash][$sheetId])) {
-            $table = $this->loadSheet($file, $worksheet, $options);
+            $locatorOptions += [
+                'excel' => $options
+            ];
+            $table = $this->loadSheet($file, $worksheet, $locatorOptions);
 
             $this->sheets[$hash][$sheetId] = $table;
         }
@@ -132,15 +143,16 @@ class Registry
         $name = $schema->name();
         $alias = Inflector::camelize($name);
 
-        $table = $this->tableLocator()->get($alias, [
+        $options += [
             'className' => Sheet::class,
-            'connection' => $connection,
-            'excel' => $options
-        ]);
+            'connection' => $connection
+        ];
+
+        $table = $this->tableLocator()->get($alias, $options);
         $table->setSchema($schema)
             ->setFile($file)
             ->setWorksheet($worksheet)
-            ->readExcel($options);
+            ->readExcel();
 
         return $table;
     }
@@ -151,7 +163,23 @@ class Registry
      */
     public function getConnection()
     {
-        return ConnectionManager::get(static::CONNECTON_NAME);
+        if ($this->connection === null) {
+            $this->connection = ConnectionManager::get(static::CONNECTON_NAME);
+        }
+
+        return $this->connection;
+    }
+
+    /**
+     *
+     * @param Connection $connection
+     * @return $this
+     */
+    public function setConnection(Connection $connection)
+    {
+        $this->connection = $connection;
+
+        return $this;
     }
 
     /**
