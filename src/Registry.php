@@ -134,6 +134,7 @@ class Registry
 
         $table = $this->tableLocator()->get($alias, [
             'className' => Sheet::class,
+            'connection' => $connection,
             'excel' => $options
         ]);
         $table->setSchema($schema)

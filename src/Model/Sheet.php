@@ -27,7 +27,6 @@ namespace Robotusers\Excel\Model;
 
 use Cake\ORM\Table;
 use Robotusers\Excel\Model\Behavior\ExcelBehavior;
-use Robotusers\Excel\Registry;
 
 /**
  * Description of Spreadsheet
@@ -47,10 +46,5 @@ class Sheet extends Table
         ];
 
         $this->addBehavior('Excel', $excelConfig);
-    }
-
-    public static function defaultConnectionName()
-    {
-        return Registry::CONNECTON_NAME;
     }
 }
