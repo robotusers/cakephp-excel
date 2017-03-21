@@ -58,6 +58,12 @@ class Factory
 
     /**
      *
+     * @var string
+     */
+    protected $primaryKey = '_row';
+
+    /**
+     *
      * @param PHPExcel_Worksheet $worksheet
      * @param array $options
      * @return TableSchema
@@ -81,10 +87,10 @@ class Factory
         $tableName = $options['tableName'];
         $schema = new TableSchema($tableName);
         $schema
-            ->addColumn('_row', 'integer')
+            ->addColumn($this->primaryKey, 'integer')
             ->addConstraint('primary', [
                 'type' => 'primary',
-                'columns' => ['_row']
+                'columns' => [$this->primaryKey]
             ]);
 
         $row = new PHPExcel_Worksheet_Row($worksheet, $options['startRow']);
@@ -191,6 +197,27 @@ class Factory
     public function setNumberFormat($format, $column)
     {
         $this->numberFormatMap[$format] = $column;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    /**
+     *
+     * @param string $primaryKey
+     * @return $this
+     */
+    public function setPrimaryKey($primaryKey)
+    {
+        $this->primaryKey = $primaryKey;
 
         return $this;
     }
