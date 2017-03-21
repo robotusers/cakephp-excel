@@ -39,15 +39,15 @@ class TestCase extends CakeTestCase
     /**
      *
      * @param string $name
+     * @param bool $create
      * @return File
      * @throws InvalidArgumentException
      */
-    protected function getFile($name)
+    protected function getFile($name, $create = false)
     {
         $path = PLUGIN_ROOT . DS . 'tests' . DS . 'files' . DS . $name;
 
-        $file = new File($path);
-
+        $file = new File($path, $create);
         if (!$file->exists()) {
             $message = sprintf('Missing file "%s".', $name);
             throw new InvalidArgumentException($message);
