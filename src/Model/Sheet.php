@@ -26,8 +26,8 @@
 namespace Robotusers\Excel\Model;
 
 use Cake\ORM\Table;
-use Robotusers\Excel\Registry;
 use Robotusers\Excel\Model\Behavior\ExcelBehavior;
+use Robotusers\Excel\Registry;
 
 /**
  * Description of Spreadsheet
@@ -45,7 +45,7 @@ class Sheet extends Table
         $excelConfig += [
             'className' => ExcelBehavior::class
         ];
-        
+
         $this->addBehavior('Excel', $excelConfig);
     }
 

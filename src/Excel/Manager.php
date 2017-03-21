@@ -79,11 +79,11 @@ class Manager
                 $primaryKey => $rowIndex
             ];
             $cells = $row->getCellIterator($options['startColumn'], $options['endColumn']);
-            
+
             $hasData = false;
             foreach ($cells as $cell) {
                 /* @var $cell PHPExcel_Cell */
-                
+
                 $column = $cell->getColumn();
                 if (isset($options['columnMap'][$column])) {
                     $property = $options['columnMap'][$column];
@@ -150,7 +150,7 @@ class Manager
             'startRow' => 1,
             'keepOriginalRows' => false
         ];
-        
+
         $pk = $table->getPrimaryKey();
         $results = $table->find($options['finder'], $options['finderOptions'])->all();
 
@@ -161,7 +161,7 @@ class Manager
             }
             $data = $result->toArray();
             unset($data[$pk]);
-            
+
             foreach ($data as $property => $value) {
                 if (isset($options['propertyMap'][$property])) {
                     $column = $options['propertyMap'][$property];

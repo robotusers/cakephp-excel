@@ -27,7 +27,8 @@ matrix:
       env: PHPSTAN=5 DEFAULT=0
       
   allow_failures:
-    - env: PHPSTAN=5 DEFAULT=0
+    - env: PHPCS=1 DEFAULT=0
+    - env: PHPSTAN>1 DEFAULT=0
 
 before_script:
   - if [[ $DEFAULT = 1 ]]; then composer install; fi

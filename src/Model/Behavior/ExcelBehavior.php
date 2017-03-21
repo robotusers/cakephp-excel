@@ -104,7 +104,7 @@ class ExcelBehavior extends Behavior
     }
 
     /**
-     * 
+     *
      * @param array $options
      * @return EntityInterface[]
      */
@@ -112,7 +112,7 @@ class ExcelBehavior extends Behavior
     {
         $options += $this->getConfig();
         $worksheet = $this->getWorksheet();
-    
+
         return $this->getManager()->read($worksheet, $this->_table, $options);
     }
 
@@ -124,7 +124,7 @@ class ExcelBehavior extends Behavior
     public function writeExcel(array $options = [])
     {
         $options += $this->getConfig();
-        
+
         $worksheet = $this->getWorksheet();
         $manager = $this->getManager();
         $manager->clear($worksheet, $options);

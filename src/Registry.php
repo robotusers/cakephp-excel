@@ -109,7 +109,7 @@ class Registry
 
         if (!isset($this->sheets[$hash][$sheetId])) {
             $table = $this->loadSheet($file, $worksheet, $options);
-            
+
             $this->sheets[$hash][$sheetId] = $table;
         }
 
