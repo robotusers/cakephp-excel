@@ -64,9 +64,6 @@ class Manager
             'marshallerOptions' => [],
             'saveOptions' => []
         ];
-        $saveOptions = $options['saveOptions'] + [
-            'updateFile' => false
-        ];
 
         $columns = $table->getSchema()->columns();
         $primaryKey = $table->getPrimaryKey();
@@ -105,7 +102,7 @@ class Manager
 
             if ($hasData) {
                 $entity = $table->newEntity($data, $options['marshallerOptions']);
-                $table->save($entity, $saveOptions);
+                $table->save($entity, $options['saveOptions']);
                 $entities[] = $entity;
             }
         }
