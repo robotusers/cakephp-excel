@@ -126,7 +126,7 @@ class FactoryTest extends TestCase
 
         $pk = $factory->getPrimaryKey();
         $this->assertEquals('_row', $pk);
-        
+
         $factory->setPrimaryKey('_id');
         $pk = $factory->getPrimaryKey();
         $this->assertEquals('_id', $pk);
