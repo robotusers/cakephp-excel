@@ -147,14 +147,22 @@ class Manager
         $options += [
             'finder' => 'all',
             'finderOptions' => [],
-            'propertyMap' => []
+            'propertyMap' => [],
+            'keepRows' => true,
+            'startRow' => 1
         ];
         
         $pk = $table->getPrimaryKey();
         $results = $table->find($options['finder'], $options['finderOptions'])->all();
 
+        $keepRows = $options['keepRows'];
+        if (!$keepRows) {
+            $row = $options['startRow'];
+        }
         foreach ($results as $result) {
-            $row = $result->get($pk);
+            if ($keepRows) {
+                $row = $result->get($pk);
+            }
             $data = $result->toArray();
             unset($data[$pk]);
             
@@ -170,6 +178,8 @@ class Manager
 
                 $cell->setValue($value);
             }
+
+            $row++;
         }
 
         return $worksheet;
