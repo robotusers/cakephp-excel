@@ -22,7 +22,7 @@ $findRoot = function ($root) {
 $root = $findRoot(__FILE__);
 unset($findRoot);
 
-define('ROOT', $root);
+define('PLUGIN_ROOT', $root);
 chdir($root);
 
 if (file_exists($root . '/config/bootstrap.php')) {
@@ -32,6 +32,6 @@ if (file_exists($root . '/config/bootstrap.php')) {
 require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
 
 Plugin::load('Robotusers/Excel', [
-    'path' => dirname(dirname(__FILE__)) . DS,
+    'path' => PLUGIN_ROOT . DS,
     'bootstrap' => true
 ]);

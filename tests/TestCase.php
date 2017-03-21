@@ -44,7 +44,7 @@ class TestCase extends CakeTestCase
      */
     protected function getFile($name)
     {
-        $path = ROOT . DS . 'tests' . DS . 'files' . DS . $name;
+        $path = PLUGIN_ROOT . DS . 'tests' . DS . 'files' . DS . $name;
 
         $file = new File($path);
 
