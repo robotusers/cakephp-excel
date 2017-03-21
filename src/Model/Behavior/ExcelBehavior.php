@@ -130,12 +130,12 @@ class ExcelBehavior extends Behavior
      * @param array $options
      * @return EntityInterface[]
      */
-    public function loadExcel(array $options = [])
+    public function readExcel(array $options = [])
     {
         $options += $this->getConfig();
         $worksheet = $this->getWorksheet();
     
-        return $this->getManager()->load($worksheet, $this->_table, $options);
+        return $this->getManager()->read($worksheet, $this->_table, $options);
     }
 
     /**

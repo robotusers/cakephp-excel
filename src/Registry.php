@@ -139,7 +139,7 @@ class Registry
         $table->setSchema($schema)
             ->setFile($file)
             ->setWorksheet($worksheet)
-            ->loadExcel($options);
+            ->readExcel($options);
 
         return $table;
     }

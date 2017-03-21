@@ -52,7 +52,7 @@ class Manager
      * @param array $options
      * @return EntityInterface[]
      */
-    public function load(PHPExcel_Worksheet $worksheet, Table $table, array $options = [])
+    public function read(PHPExcel_Worksheet $worksheet, Table $table, array $options = [])
     {
         $options += [
             'startRow' => 1,
