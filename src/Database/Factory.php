@@ -31,7 +31,6 @@ use Cake\Utility\Inflector;
 use Cake\Utility\Text;
 use PHPExcel_Cell;
 use PHPExcel_Cell_DataType;
-use PHPExcel_Style_NumberFormat;
 use PHPExcel_Worksheet;
 use PHPExcel_Worksheet_Row;
 
@@ -47,15 +46,7 @@ class Factory
      *
      * @var array
      */
-    protected $typeMap = [
-        PHPExcel_Cell_DataType::TYPE_NUMERIC => [
-            'type' => 'float',
-            'null' => true
-        ],
-        PHPExcel_Cell_DataType::TYPE_BOOL => [
-            'type' => 'boolean',
-            'null' => true
-        ],
+    protected $dataTypeMap = [
         PHPExcel_Cell_DataType::TYPE_NULL => false
     ];
 
@@ -63,12 +54,7 @@ class Factory
      *
      * @var array
      */
-    protected $formatMap = [
-        PHPExcel_Style_NumberFormat::FORMAT_DATE_DATETIME => [
-            'type' => 'datetime',
-            'null' => true
-        ]
-    ];
+    protected $numberFormatMap = [];
 
     /**
      *
@@ -79,20 +65,21 @@ class Factory
     public function createSchema(PHPExcel_Worksheet $worksheet, array $options = [])
     {
         $options += [
-            'table' => $this->getTableName($worksheet),
+            'tableName' => $this->getTableName($worksheet),
             'startRow' => 1,
             'startColumn' => 'A',
             'endColumn' => null,
-            'typeMap' => $this->typeMap,
-            'formatMap' => $this->formatMap,
+            'dataTypeMap' => $this->dataTypeMap,
+            'numberFormatMap' => $this->numberFormatMap,
+            'columnTypeMap' => [],
             'defaultType' => [
                 'type' => 'string',
                 'null' => true
             ]
         ];
 
-        $name = $options['table'];
-        $schema = new TableSchema($name);
+        $tableName = $options['tableName'];
+        $schema = new TableSchema($tableName);
         $schema
             ->addColumn('_row', 'integer')
             ->addConstraint('primary', [
@@ -105,19 +92,22 @@ class Factory
         foreach ($cells as $cell) {
             /* @var $cell PHPExcel_Cell */
 
-            $name = strtolower($cell->getColumn());
             $format = $cell->getStyle()->getNumberFormat()->getFormatCode();
-            $type = $cell->getDataType();
+            $dataType = $cell->getDataType();
+            $column = $cell->getColumn();
 
-            if (isset($options['formatMap'][$format])) {
-                $type = $options['formatMap'][$format];
-            } elseif (isset($options['typeMap'][$type])) {
-                $type = $options['typeMap'][$type];
+            if (isset($options['columnTypeMap'][$column])) {
+                $type = $options['columnTypeMap'][$column];
+            } elseif (isset($options['numberFormatMap'][$format])) {
+                $type = $options['numberFormatMap'][$format];
+            } elseif (isset($options['dataTypeMap'][$dataType])) {
+                $type = $options['dataTypeMap'][$dataType];
             } else {
                 $type = $options['defaultType'];
             }
 
             if ($type !== false) {
+                $name = strtolower($column);
                 $schema->addColumn($name, $type);
             }
         }
@@ -153,7 +143,7 @@ class Factory
         $title = $excel->getID() . ' ' . $worksheet->getTitle();
 
         $slug = Text::slug($title, [
-                'replacement' => '_'
+            'replacement' => '_'
         ]);
         $camelized = Inflector::camelize($slug);
         $name = Inflector::tableize($camelized);
@@ -165,18 +155,18 @@ class Factory
      *
      * @return array
      */
-    public function getTypeMap()
+    public function getDataTypeMap()
     {
-        return $this->typeMap;
+        return $this->dataTypeMap;
     }
 
     /**
      *
      * @return array
      */
-    public function getFormatMap()
+    public function getNumberFormatMap()
     {
-        return $this->formatMap;
+        return $this->numberFormatMap;
     }
 
     /**
@@ -185,9 +175,9 @@ class Factory
      * @param string|array|false $column
      * @return $this
      */
-    public function setType($type, $column)
+    public function setDataType($type, $column)
     {
-        $this->typeMap[$type] = $column;
+        $this->dataTypeMap[$type] = $column;
 
         return $this;
     }
@@ -198,9 +188,9 @@ class Factory
      * @param string|array|false $column
      * @return $this
      */
-    public function setFormat($format, $column)
+    public function setNumberFormat($format, $column)
     {
-        $this->formatMap[$format] = $column;
+        $this->numberFormatMap[$format] = $column;
 
         return $this;
     }
