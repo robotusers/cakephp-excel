@@ -38,7 +38,9 @@ use PHPExcel_Reader_IReader;
 use PHPExcel_Shared_Date;
 use PHPExcel_Worksheet;
 use PHPExcel_Worksheet_Row;
+use PHPExcel_Writer_CSV;
 use PHPExcel_Writer_IWriter;
+use UnexpectedValueException;
 
 /**
  * Description of Manager
@@ -147,6 +149,7 @@ class Manager
             'finder' => 'all',
             'finderOptions' => [],
             'propertyMap' => [],
+            'columnCallbacks' => [],
             'startRow' => 1,
             'keepOriginalRows' => false
         ];
@@ -156,10 +159,16 @@ class Manager
 
         $row = $options['startRow'];
         foreach ($results as $result) {
-            if ($options['keepOriginalRows']) {
-                $row = $result->get($pk);
+            if (is_array($result)) {
+                $data = $result;
+            } elseif (is_object($result) && method_exists($result, 'toArray')) {
+                $data = $result->toArray();
+            } else {
+                throw new UnexpectedValueException('Cannot convert result to array.');
             }
-            $data = $result->toArray();
+            if ($options['keepOriginalRows']) {
+                $row = $data[$pk];
+            }
             unset($data[$pk]);
 
             foreach ($data as $property => $value) {
@@ -172,6 +181,11 @@ class Manager
                 $coords = $column . $row;
                 $cell = $worksheet->getCell($coords);
                 $this->setCellValue($cell, $value);
+                if (isset($options['columnCallbacks'][$column])) {
+                    $callback = $options['columnCallbacks'][$column];
+                    $callback($cell);
+                }
+
             }
 
             $row++;
@@ -242,12 +256,26 @@ class Manager
      *
      * @param PHPExcel $excel
      * @param File $file
+     * @param array $options
      * @return PHPExcel_Writer_IWriter
      */
-    public function getWriter(PHPExcel $excel, File $file)
+    public function getWriter(PHPExcel $excel, File $file, array $options = [])
     {
         $type = PHPExcel_IOFactory::identify($file->pwd());
+        $writer = PHPExcel_IOFactory::createWriter($excel, $type);
 
-        return PHPExcel_IOFactory::createWriter($excel, $type);
+        if ($writer instanceof PHPExcel_Writer_CSV) {
+            if (isset($options['delimiter'])) {
+                $writer->setDelimiter($options['delimiter']);
+            }
+        }
+        if (isset($options['callback'])) {
+            $result = $options['callback']($writer, $file);
+            if ($result instanceof PHPExcel_Writer_IWriter) {
+                $writer = $result;
+            }
+        }
+
+        return $writer;
     }
 }
