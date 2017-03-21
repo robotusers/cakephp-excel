@@ -155,6 +155,24 @@ class Registry
 
     /**
      *
+     * @return Factory
+     */
+    public function getFactory()
+    {
+        return $this->factory;
+    }
+
+    /**
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     *
      * @return self
      */
     public static function instance()
