@@ -30,6 +30,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Filesystem\File;
 use Cake\ORM\Behavior;
+use Cake\ORM\Table;
 use InvalidArgumentException;
 use PHPExcel;
 use PHPExcel_Worksheet;
@@ -125,30 +126,20 @@ class ExcelBehavior extends Behavior
     }
 
     /**
-     *
-     * @param string|File $file
-     * @param string $worksheet
+     * 
      * @param array $options
      * @return EntityInterface[]
-     * @throws InvalidArgumentException
      */
-    public function loadExcel($worksheet = null, array $options = [])
+    public function loadExcel(array $options = [])
     {
         $options += $this->getConfig();
-
-        if (!$worksheet instanceof PHPExcel_Worksheet) {
-            $file = $this->getFile();
-            $excel = $this->getManager()->getExcel($file, $options);
-            $worksheet = $this->discoverWorksheet($excel, $worksheet);
-        }
-        $this->worksheet = $worksheet;
+        $worksheet = $this->getWorksheet();
     
-        return $this->getManager()->load($this->worksheet, $this->_table);
+        return $this->getManager()->load($worksheet, $this->_table, $options);
     }
 
     /**
      *
-     * @param string|File $file
      * @param array $options
      * @return File
      */
@@ -198,6 +189,24 @@ class ExcelBehavior extends Behavior
 
     /**
      *
+     * @param string|int|PHPExcel_Worksheet $worksheet
+     * @param array $options
+     * @return Table
+     */
+    public function setWorksheet($worksheet = null, array $options = [])
+    {
+        if (!$worksheet instanceof PHPExcel_Worksheet) {
+            $file = $this->getFile();
+            $excel = $this->getManager()->getExcel($file, $options);
+            $worksheet = $this->discoverWorksheet($excel, $worksheet);
+        }
+        $this->worksheet = $worksheet;
+
+        return $this->_table;
+    }
+
+    /**
+     *
      * @return PHPExcel
      */
     public function getExcel()
@@ -208,6 +217,7 @@ class ExcelBehavior extends Behavior
     /**
      *
      * @return File
+     * @throws RuntimeException
      */
     public function getFile()
     {
@@ -221,12 +231,12 @@ class ExcelBehavior extends Behavior
     /**
      *
      * @param File $file
-     * @return $this
+     * @return Table
      */
     public function setFile(File $file)
     {
         $this->file = $file;
 
-        return $this;
+        return $this->_table;
     }
 }

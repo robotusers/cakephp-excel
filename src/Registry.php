@@ -30,6 +30,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Inflector;
+use PHPExcel_Worksheet;
 use Robotusers\Excel\Database\Factory;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Model\Sheet;
@@ -63,7 +64,7 @@ class Registry
      *
      * @var array
      */
-    protected $tables = [];
+    protected $sheets = [];
 
     /**
      *
@@ -106,26 +107,41 @@ class Registry
         $hash = $file->md5();
         $sheetId = $excel->getIndex($worksheet);
 
-        if (!isset($this->tables[$hash][$sheetId])) {
-            $schema = $this->factory->createSchema($worksheet, $options);
-            $connection = $this->getConnection();
-            $this->factory->createTable($connection, $schema);
-
-            $name = $schema->name();
-            $alias = Inflector::camelize($name);
-
-            $table = $this->tableLocator()->get($alias, [
-                'className' => Sheet::class,
-                'excel' => $options
-            ]);
-            $table->setSchema($schema);
-            $table->setFile($file);
-            $table->loadExcel($worksheet, $options);
+        if (!isset($this->sheets[$hash][$sheetId])) {
+            $table = $this->loadSheet($file, $worksheet, $options);
             
-            $this->tables[$hash][$sheetId] = $table;
+            $this->sheets[$hash][$sheetId] = $table;
         }
 
-        return $this->tables[$hash][$sheetId];
+        return $this->sheets[$hash][$sheetId];
+    }
+
+    /**
+     *
+     * @param File $file
+     * @param PHPExcel_Worksheet $worksheet
+     * @param array $options
+     * @return Sheet
+     */
+    protected function loadSheet(File $file, PHPExcel_Worksheet $worksheet, array $options)
+    {
+        $schema = $this->factory->createSchema($worksheet, $options);
+        $connection = $this->getConnection();
+        $this->factory->createTable($connection, $schema);
+
+        $name = $schema->name();
+        $alias = Inflector::camelize($name);
+
+        $table = $this->tableLocator()->get($alias, [
+            'className' => Sheet::class,
+            'excel' => $options
+        ]);
+        $table->setSchema($schema)
+            ->setFile($file)
+            ->setWorksheet($worksheet)
+            ->loadExcel($options);
+
+        return $table;
     }
 
     /**
