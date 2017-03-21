@@ -149,19 +149,16 @@ class Manager
             'finder' => 'all',
             'finderOptions' => [],
             'propertyMap' => [],
-            'keepRows' => true,
-            'startRow' => 1
+            'startRow' => 1,
+            'keepOriginalRows' => false
         ];
         
         $pk = $table->getPrimaryKey();
         $results = $table->find($options['finder'], $options['finderOptions'])->all();
 
-        $keepRows = $options['keepRows'];
-        if (!$keepRows) {
-            $row = $options['startRow'];
-        }
+        $row = $options['startRow'];
         foreach ($results as $result) {
-            if ($keepRows) {
+            if ($options['keepOriginalRows']) {
                 $row = $result->get($pk);
             }
             $data = $result->toArray();
