@@ -46,5 +46,4 @@ class RegularColumnsFixture extends TestFixture
             'primary' => ['type' => 'primary', 'columns' => ['_row']]
         ]
     ];
-
 }

@@ -46,5 +46,4 @@ class MappedColumnsFixture extends TestFixture
             'primary' => ['type' => 'primary', 'columns' => ['id']]
         ]
     ];
-
 }

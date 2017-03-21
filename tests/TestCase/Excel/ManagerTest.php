@@ -47,7 +47,7 @@ class ManagerTest extends TestCase
         'plugin.Robotusers/Excel.regular_columns',
         'plugin.Robotusers/Excel.mapped_columns'
     ];
-    
+
     public function testGetReaderXlsx()
     {
         $manager = new Manager();
@@ -75,7 +75,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.csv');
 
         $reader = $manager->getReader($file, [
-            'callback' => function($reader){
+            'callback' => function ($reader) {
                 $reader->setEnclosure('FOO');
             }
         ]);
@@ -113,7 +113,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.csv');
 
         $writer = $manager->getWriter($excel, $file, [
-            'callback' => function($reader){
+            'callback' => function ($reader) {
                 $reader->setEnclosure('FOO');
             }
         ]);
@@ -352,13 +352,13 @@ class ManagerTest extends TestCase
         $manager->write($table, $worksheet, [
             'propertyMap' => $map,
             'columnCallbacks' => [
-                'D' => function($cell) {
+                'D' => function ($cell) {
                     $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD');
                 },
-                'E' => function($cell) {
+                'E' => function ($cell) {
                     $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD HH:MM:SS');
                 },
-                'F' => function($cell) {
+                'F' => function ($cell) {
                     $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD HH:MM:SS');
                 }
             ]

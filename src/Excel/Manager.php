@@ -185,7 +185,6 @@ class Manager
                     $callback = $options['columnCallbacks'][$column];
                     $callback($cell);
                 }
-
             }
 
             $row++;
