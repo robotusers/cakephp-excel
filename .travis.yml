@@ -1,0 +1,40 @@
+language: php
+
+dist: trusty
+
+sudo: false
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+  
+env:
+  global:
+    - DEFAULT=1
+
+matrix:
+  fast_finish: true
+
+  include:
+    - env: PHPCS=1 DEFAULT=0
+    - php: 7.1
+      env: PHPSTAN=1 DEFAULT=0
+    - php: 7.1
+      env: PHPSTAN=5 DEFAULT=0
+      
+  allow_failures:
+    - env: PHPSTAN=5 DEFAULT=0
+
+before_script:
+  - if [[ $DEFAULT = 1 ]]; then composer install; fi
+  - if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:~2.1; fi
+  - if [[ $PHPSTAN > 0 ]]; then composer require phpstan/phpstan:^0.6; fi
+
+script:
+  - if [[ $DEFAULT = 1 ]]; then vendor/bin/phpunit; fi
+  - if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./dev; fi
+  - if [[ $PHPSTAN > 0 ]]; then vendor/bin/phpstan analyse ./src --level $PHPSTAN; fi
+
+notifications:
+  email: false
