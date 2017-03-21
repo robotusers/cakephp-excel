@@ -42,7 +42,6 @@ use PHPExcel_Worksheet_Row;
  */
 class Factory
 {
-    const CONNECTON_NAME = 'excel';
 
     /**
      *
@@ -102,8 +101,7 @@ class Factory
             ]);
 
         $row = new PHPExcel_Worksheet_Row($worksheet, $options['startRow']);
-        $cells = $row->getCellIterator($options['startColumn'],
-            $options['endColumn']);
+        $cells = $row->getCellIterator($options['startColumn'], $options['endColumn']);
         foreach ($cells as $cell) {
             /* @var $cell PHPExcel_Cell */
 
@@ -153,8 +151,6 @@ class Factory
     {
         $excel = $worksheet->getParent();
         $title = $excel->getID() . ' ' . $worksheet->getTitle();
-
-//        $title = $worksheet->getTitle();
 
         $slug = Text::slug($title, [
                 'replacement' => '_'
