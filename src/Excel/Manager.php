@@ -86,7 +86,7 @@ class Manager
                 if (isset($options['columnMap'][$column])) {
                     $property = $options['columnMap'][$column];
                 } else {
-                    $property = strtolower($column);
+                    $property = $column;
                 }
 
                 $value = $cell->getValue();

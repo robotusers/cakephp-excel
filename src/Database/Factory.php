@@ -75,6 +75,7 @@ class Factory
             'startRow' => 1,
             'startColumn' => 'A',
             'endColumn' => null,
+            'columnMap' => [],
             'dataTypeMap' => $this->dataTypeMap,
             'numberFormatMap' => $this->numberFormatMap,
             'columnTypeMap' => [],
@@ -113,8 +114,10 @@ class Factory
             }
 
             if ($type !== false) {
-                $name = strtolower($column);
-                $schema->addColumn($name, $type);
+                if (isset($options['columnMap'][$column])) {
+                    $column = $options['columnMap'][$column];
+                }
+                $schema->addColumn($column, $type);
             }
         }
 
