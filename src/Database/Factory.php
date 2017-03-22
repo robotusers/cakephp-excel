@@ -72,6 +72,7 @@ class Factory
     {
         $options += [
             'tableName' => $this->getTableName($worksheet),
+            'primaryKey' => $this->primaryKey,
             'startRow' => 1,
             'startColumn' => 'A',
             'endColumn' => null,
@@ -86,12 +87,13 @@ class Factory
         ];
 
         $tableName = $options['tableName'];
+        $primaryKey = $options['primaryKey'];
         $schema = new TableSchema($tableName);
         $schema
-            ->addColumn($this->primaryKey, 'integer')
+            ->addColumn($primaryKey, 'integer')
             ->addConstraint('primary', [
                 'type' => 'primary',
-                'columns' => [$this->primaryKey]
+                'columns' => [$primaryKey]
             ]);
 
         $row = new PHPExcel_Worksheet_Row($worksheet, $options['startRow']);
