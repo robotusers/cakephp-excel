@@ -12,7 +12,7 @@ This plugin is build using [PHPExcel](https://github.com/PHPOffice/PHPExcel) lib
 composer require robotusers/cakephp-excel
 ```
 
-## Usage
+## Using the plugin
 
 Excel plugin lets you manipulate spreadsheet files multiple ways. The simplest use case is to load your spreadhseet data into CakePHP ORM table.
 
@@ -96,8 +96,83 @@ $row = $table->newEntity([
 $table->save($row);
 ```
 
-Now the new record is saved, but excel file has not been updated yer. You have to call `writeExcel()` method:
+Now the new record is saved, but excel file has not been updated yet. You have to call `writeExcel()` method:
 
 ```php
 $table->writeExcel();
+```
+
+## Behavior
+
+This plugin provides a behavior which could be added to any table.
+
+```php
+//AlbumsTable.php
+
+public function initialize()
+{
+    $this->addBehavior('Robotusers/Excel.Excel', [
+        'columnMap' => [
+            'A' => 'band',
+            'B' => 'album',
+            'C' => 'year'
+        ]
+    ]);
+}
+```
+
+If you want to load data into your table you have to set a worksheet instance.
+
+```php
+use Cake\Filesystem\File;
+
+$file = new File('path/to/file.xls');
+$excel = $table->getManager()->getExcel($file); // PHPExcel instance
+$worksheet = $excel->getActiveSheet(); // PHPExcel_Worksheet instance
+
+$table->setWorksheet($worksheet)->readExcel();
+```
+
+Now your table is populated with excel data.
+
+If you want to write your data back to excel file you have to set a file.
+
+```php
+$table->setFile($file)->writeExcel();
+```
+
+## Working with different tables
+
+It is also possible to load data into any table.
+
+```php
+use Robotusers\Excel\Excel\Manager;
+
+$table = TableRegistry::get('SomeTable');
+$manager = new Manager();
+
+$file = new File('file.xlsx');
+$excel = $manager->getExcel($file);
+$worksheet = $excel->getActiveSheet();
+
+$manager->read($worksheet, $table, [
+    'columnMap' => [
+        'A' => 'band',
+        'B' => 'album',
+        'C' => 'year'
+    ]
+]);
+
+//manipulate your data...
+
+//here you have to tell where properties should be placed
+$manager->write($table, $worksheet, [
+    'propertyMap' => [
+        'band' => 'A',
+        'album' => 'B',
+        'year' => 'C'
+    ]
+]);
+//to actually save the file you have to call save()
+$writer = $manager->save($excel, $file);
 ```
