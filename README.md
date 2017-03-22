@@ -47,7 +47,7 @@ $row = $table->find()->first()->toArray();
 ]
 ```
 
-Each column is represented as a property. Values are `string` by default. Row number is represented as `_row` property which is also a primary key of a table.
+Each column is represented as a property. Values are `string` by default.
 
 You may also map columns to custom properties and types.
 
@@ -102,6 +102,51 @@ Now the new record is saved, but excel file has not been updated yet. You have t
 ```php
 $table->writeExcel();
 ```
+
+You may also wont to read/write some of the rows or columns.
+
+```php
+use Robotusers/Excel/Registry;
+
+$table = $registry->get('path/to/records.xlsx', 'Albums', [
+    'startRow' => 2,
+    'endRow' => 3,
+    'startColumn' => 'B',
+    'endColumn' => 'B'
+]);
+
+$row = $table->find()->first()->toArray();
+
+//this is how a simple row looks like:
+[
+    '_row' => 1,
+    'B' => 'Machine Head'
+]
+```
+
+Note that `_row` does not match the real row index. To keep original row indexes you mast use `keepOriginalRows` option.
+
+```php
+use Robotusers/Excel/Registry;
+
+$table = $registry->get('path/to/records.xlsx', 'Albums', [
+    'startRow' => 2,
+    'endRow' => 3,
+    'startColumn' => 'B',
+    'endColumn' => 'B',
+    'keepOriginalRows' => true
+]);
+
+$row = $table->find()->first()->toArray();
+
+//this is how a simple row looks like:
+[
+    '_row' => 2,
+    'B' => 'Machine Head'
+]
+```
+
+The same principle applies to writing to a file. If you for example delete the second row it won't become empty in result excel file when `keepOriginalRows` is `false`. You have to set it to true if you want to keep rows consistency across the table and the file.
 
 ## Behavior
 
