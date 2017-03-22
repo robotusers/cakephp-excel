@@ -277,4 +277,19 @@ class Manager
 
         return $writer;
     }
+
+    /**
+     *
+     * @param PHPExcel $excel
+     * @param File $file
+     * @param array $options
+     * @return File
+     */
+    public function save(PHPExcel $excel, File $file, array $options = [])
+    {
+        $writer = $this->getWriter($excel, $file, $options);
+        $writer->save($file->pwd());
+
+        return $file;
+    }
 }
