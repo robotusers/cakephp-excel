@@ -174,13 +174,32 @@ class ManagerTest extends TestCase
 
         $first = $table->find()->first();
 
-        $this->assertSame(2, $first->_row);
+        $this->assertSame(1, $first->_row);
         $this->assertSame(null, $first->A);
         $this->assertSame('2', $first->B);
         $this->assertSame('2.02', $first->C);
         $this->assertSame('2017-01-02', $first->D);
         $this->assertSame(null, $first->E);
         $this->assertSame(null, $first->F);
+    }
+
+    public function testReadKeepOriginalRows()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('RegularColumns');
+
+        $manager->read($worksheet, $table, [
+            'startRow' => 2,
+            'keepOriginalRows' => true
+        ]);
+
+        $first = $table->find()->first();
+
+        $this->assertSame(2, $first->_row);
     }
 
     public function testReadColumnMap()
