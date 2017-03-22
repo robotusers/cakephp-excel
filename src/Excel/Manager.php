@@ -29,6 +29,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Filesystem\File;
 use Cake\ORM\Table;
 use DateTimeInterface;
+use InvalidArgumentException;
 use PHPExcel;
 use PHPExcel_Cell;
 use PHPExcel_Cell_DataType;
@@ -142,6 +143,7 @@ class Manager
      * @param PHPExcel_Worksheet $worksheet
      * @param array $options
      * @return PHPExcel_Worksheet
+     * @throws UnexpectedValueException
      */
     public function write(Table $table, PHPExcel_Worksheet $worksheet, array $options = [])
     {
@@ -231,9 +233,15 @@ class Manager
      * @param File $file
      * @param array $options
      * @return PHPExcel_Reader_IReader
+     * @throws InvalidArgumentException
      */
     public function getReader(File $file, array $options = [])
     {
+        if (!$file->exists()) {
+            $message = sprintf('File %s does not exist.', $file->name());
+            throw new InvalidArgumentException($message);
+        }
+
         $reader = PHPExcel_IOFactory::createReaderForFile($file->pwd());
 
         if ($reader instanceof PHPExcel_Reader_CSV) {
@@ -257,9 +265,15 @@ class Manager
      * @param File $file
      * @param array $options
      * @return PHPExcel_Writer_IWriter
+     * @throws InvalidArgumentException
      */
     public function getWriter(PHPExcel $excel, File $file, array $options = [])
     {
+        if (!$file->exists()) {
+            $message = sprintf('File %s does not exist.', $file->name());
+            throw new InvalidArgumentException($message);
+        }
+        
         $type = PHPExcel_IOFactory::identify($file->pwd());
         $writer = PHPExcel_IOFactory::createWriter($excel, $type);
 
