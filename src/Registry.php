@@ -136,7 +136,7 @@ class Registry
      */
     protected function loadSheet(File $file, PHPExcel_Worksheet $worksheet, array $options)
     {
-        $schema = $this->factory->createSchema($worksheet, $options);
+        $schema = $this->factory->createSchema($worksheet, $options['excel']);
         $connection = $this->getConnection();
         $this->factory->createTable($connection, $schema);
 
