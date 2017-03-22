@@ -10,6 +10,7 @@ This plugin is build using [PHPExcel](https://github.com/PHPOffice/PHPExcel) lib
 
 ```
 composer require robotusers/cakephp-excel
+bin/cake plugin load Robotusers/Excel -b
 ```
 
 ## Using the plugin
