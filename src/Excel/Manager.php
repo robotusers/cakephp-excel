@@ -67,7 +67,8 @@ class Manager
             'endColumn' => null,
             'columnMap' => [],
             'marshallerOptions' => [],
-            'saveOptions' => []
+            'saveOptions' => [],
+            'keepOriginalRows' => false
         ];
 
         $columns = $table->getSchema()->columns();
@@ -78,9 +79,10 @@ class Manager
         foreach ($rows as $rowIndex => $row) {
             /* @var $row PHPExcel_Worksheet_Row */
 
-            $data = [
-                $primaryKey => $rowIndex
-            ];
+            $data = [];
+            if ($options['keepOriginalRows']) {
+                $data[$primaryKey] = $rowIndex;
+            }
             $cells = $row->getCellIterator($options['startColumn'], $options['endColumn']);
 
             $hasData = false;
@@ -273,7 +275,7 @@ class Manager
             $message = sprintf('File %s does not exist.', $file->name());
             throw new InvalidArgumentException($message);
         }
-        
+
         $type = PHPExcel_IOFactory::identify($file->pwd());
         $writer = PHPExcel_IOFactory::createWriter($excel, $type);
 
