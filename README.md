@@ -103,7 +103,7 @@ Now the new record is saved, but excel file has not been updated yet. You have t
 $table->writeExcel();
 ```
 
-You may also wont to read/write some of the rows or columns.
+You may also want to read or write only some of the rows and columns.
 
 ```php
 use Robotusers/Excel/Registry;
@@ -124,7 +124,7 @@ $row = $table->find()->first()->toArray();
 ]
 ```
 
-Note that `_row` does not match the real row index. To keep original row indexes you mast use `keepOriginalRows` option.
+Note that `_row` does not match the real row index. To keep original row indexes you must use `keepOriginalRows` option.
 
 ```php
 use Robotusers/Excel/Registry;
@@ -146,7 +146,7 @@ $row = $table->find()->first()->toArray();
 ]
 ```
 
-The same principle applies to writing to a file. If you for example delete the second row it won't become empty in result excel file when `keepOriginalRows` is `false`. You have to set it to true if you want to keep rows consistency across the table and the file.
+The same principle applies to writing to a file. If you delete the second row it won't become empty in result excel file when `keepOriginalRows` is `false`. You have to set this option to `true` if you want to keep rows consistency across the table and the file.
 
 ## Behavior
 
