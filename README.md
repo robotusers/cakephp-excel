@@ -2,6 +2,7 @@
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/robotusers/cakephp-excel.svg?branch=master)](https://travis-ci.org/robotusers/cakephp-excel)
+[![codecov](https://codecov.io/gh/robotusers/cakephp-excel/branch/master/graph/badge.svg)](https://codecov.io/gh/robotusers/cakephp-excel)
 
 CakePHP Excel plugin allows for spreadsheet files manipulation with the power of CakePHP ORM.
 This plugin is build using [PHPExcel](https://github.com/PHPOffice/PHPExcel) library and can work with multiple types of spreadsheet files (excel, csv etc).
