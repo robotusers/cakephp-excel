@@ -1,7 +1,7 @@
 {
 	"name": "robotusers/cakephp-excel",
 	"description": "Robotusers CakePHP Excel plugin",
-	"homepage": "http://www.robotusers.com",
+	"homepage": "https://github.com/robotusers/cakephp-table-inheritance",
 	"type": "cakephp-plugin",
 	"require": {
 		"php": ">=5.5",
