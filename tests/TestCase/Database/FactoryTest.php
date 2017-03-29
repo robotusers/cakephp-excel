@@ -41,7 +41,7 @@ use Robotusers\Excel\Test\TestCase;
 class FactoryTest extends TestCase
 {
     /**
-     * @covers Factory::getNumberFormatMap
+     * @covers \Robotusers\Excel\Database\Factory::getNumberFormatMap
      */
     public function testSetNumberFormat()
     {
@@ -55,7 +55,7 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @covers Factory::getDataTypeMap
+     * @covers \Robotusers\Excel\Database\Factory::getDataTypeMap
      */
     public function testSetDataType()
     {
@@ -117,8 +117,8 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @covers Factory::getPrimaryKey
-     * @covers Factory::setPrimaryKey
+     * @covers \Robotusers\Excel\Database\Factory::getPrimaryKey
+     * @covers \Robotusers\Excel\Database\Factory::setPrimaryKey
      */
     public function testPrimaryKey()
     {

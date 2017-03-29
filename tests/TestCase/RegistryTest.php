@@ -155,10 +155,10 @@ class RegistryTest extends TestCase
     }
 
     /**
-     * @covers Registry::instance
-     * @covers Registry::getManager
-     * @covers Registry::getFactory
-     * @covers Registry::getConnection
+     * @covers \Robotusers\Excel\Registry::instance
+     * @covers \Robotusers\Excel\Registry::getManager
+     * @covers \Robotusers\Excel\Registry::getFactory
+     * @covers \Robotusers\Excel\Registry::getConnection
      */
     public function testDefaultInstance()
     {
