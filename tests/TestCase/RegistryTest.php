@@ -154,6 +154,69 @@ class RegistryTest extends TestCase
         $this->assertSame($table, $sheet);
     }
 
+    public function testGetWithFilename()
+    {
+        $registry = $this->createRegistry();
+
+        $name = 'Results';
+        $options = [
+            'foo' => 'bar'
+        ];
+
+        $reader = $this->createMock(PHPExcel_Reader_IReader::class);
+        $excel = $this->createMock(PHPExcel::class);
+        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $schema = $this->createMock(TableSchema::class);
+        $table = $this->getMockBuilder(Sheet::class)
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'setSchema',
+                'setFile',
+                'setWorksheet',
+                'readExcel'
+            ])
+            ->getMock();
+
+        $registry->getManager()
+            ->method('getReader')
+            ->willReturn($reader);
+
+        $reader->method('load')
+            ->willReturn($excel);
+
+        $excel->method('getActiveSheet')
+            ->willReturn($worksheet);
+
+        $registry->getFactory()
+            ->method('createSchema')
+            ->willReturn($schema);
+
+        $schema->method('name')
+            ->willReturn($name);
+
+        $registry->tableLocator()
+            ->method('get')
+            ->with($name, [
+                'className' => Sheet::class,
+                'connection' => $registry->getConnection(),
+                'excel' => $options
+            ])
+            ->willReturn($table);
+
+        $table->method('setSchema')
+            ->willReturn($table);
+        $table->method('setFile')
+            ->willReturn($table);
+        $table->method('setWorksheet')
+            ->willReturn($table);
+        $table->expects($this->any())
+            ->method('readExcel');
+
+        $sheet = $registry->get('test.xlsx', $options);
+
+        $this->assertSame($table, $sheet);
+    }
+
     /**
      * @covers \Robotusers\Excel\Registry::instance
      * @covers \Robotusers\Excel\Registry::getManager
