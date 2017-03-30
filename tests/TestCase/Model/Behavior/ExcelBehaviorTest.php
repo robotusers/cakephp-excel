@@ -27,11 +27,13 @@ namespace Robotusers\Excel\Test\TestCase\Model\Behavior;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 use PHPExcel;
 use PHPExcel_Worksheet;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Test\TestCase;
 use RuntimeException;
+use stdClass;
 
 /**
  * Description of ExcelBehaviorTest
@@ -106,6 +108,144 @@ class ExcelBehaviorTest extends TestCase
         $this->assertSame($worksheet, $tableWorksheet);
     }
 
+    public function testWorksheetName()
+    {
+        $excel = $this->createMock(\PHPExcel::class);
+        $manager = $this->createMock(Manager::class);
+        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $file = $this->createMock(\Cake\Filesystem\File::class);
+
+        $table = $this->createTable([
+            'manager' => $manager
+        ]);
+        $table->setFile($file);
+
+        $manager->method('getExcel')
+            ->willReturn($excel);
+
+        $excel->expects($this->once())
+            ->method('sheetNameExists')
+            ->with('foo')
+            ->willReturn(true);
+
+        $excel->expects($this->once())
+            ->method('getSheetByName')
+            ->with('foo')
+            ->willReturn($worksheet);
+
+
+        $table->setWorksheet('foo');
+        $tableWorksheet = $table->getWorksheet();
+
+        $this->assertSame($worksheet, $tableWorksheet);
+    }
+
+    public function testWorksheetCodeName()
+    {
+        $excel = $this->createMock(\PHPExcel::class);
+        $manager = $this->createMock(Manager::class);
+        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $file = $this->createMock(\Cake\Filesystem\File::class);
+
+        $table = $this->createTable([
+            'manager' => $manager
+        ]);
+        $table->setFile($file);
+
+        $manager->method('getExcel')
+            ->willReturn($excel);
+
+        $excel->expects($this->once())
+            ->method('sheetNameExists')
+            ->with('foo')
+            ->willReturn(false);
+
+        $excel->expects($this->once())
+            ->method('sheetCodeNameExists')
+            ->with('foo')
+            ->willReturn(true);
+
+        $excel->expects($this->once())
+            ->method('getSheetByCodeName')
+            ->with('foo')
+            ->willReturn($worksheet);
+
+
+        $table->setWorksheet('foo');
+        $tableWorksheet = $table->getWorksheet();
+
+        $this->assertSame($worksheet, $tableWorksheet);
+    }
+
+    public function testWorksheetIndex()
+    {
+        $excel = $this->createMock(\PHPExcel::class);
+        $manager = $this->createMock(Manager::class);
+        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $file = $this->createMock(\Cake\Filesystem\File::class);
+
+        $table = $this->createTable([
+            'manager' => $manager
+        ]);
+        $table->setFile($file);
+
+        $manager->method('getExcel')
+            ->willReturn($excel);
+
+        $excel->expects($this->once())
+            ->method('sheetNameExists')
+            ->with(1)
+            ->willReturn(false);
+
+        $excel->expects($this->once())
+            ->method('sheetCodeNameExists')
+            ->with(1)
+            ->willReturn(false);
+
+        $excel->expects($this->once())
+            ->method('getSheet')
+            ->with(1)
+            ->willReturn($worksheet);
+
+
+        $table->setWorksheet(1);
+        $tableWorksheet = $table->getWorksheet();
+
+        $this->assertSame($worksheet, $tableWorksheet);
+    }
+
+    public function testWorksheetActive()
+    {
+        $excel = $this->createMock(\PHPExcel::class);
+        $manager = $this->createMock(Manager::class);
+        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $file = $this->createMock(\Cake\Filesystem\File::class);
+
+        $table = $this->createTable([
+            'manager' => $manager
+        ]);
+        $table->setFile($file);
+
+        $manager->method('getExcel')
+            ->willReturn($excel);
+
+        $excel->expects($this->never())
+            ->method('sheetNameExists');
+
+        $excel->expects($this->never())
+            ->method('sheetCodeNameExists');
+
+        $excel->expects($this->once())
+            ->method('getActiveSheet')
+            ->willReturn($worksheet);
+
+
+        $table->setWorksheet(null);
+        $tableWorksheet = $table->getWorksheet();
+
+        $this->assertSame($worksheet, $tableWorksheet);
+    }
+
     /**
      * @expectedException RuntimeException
      * @expectedExceptionMessage Worksheet has not been set.
@@ -145,6 +285,20 @@ class ExcelBehaviorTest extends TestCase
         $tableManager = $table->getManager();
 
         $this->assertSame($manager, $tableManager);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid manager.
+     */
+    public function testInvalidManager()
+    {
+        $manager = new stdClass();
+        $table = $this->createTable([
+            'manager' => $manager
+        ]);
+
+        $table->getManager();
     }
 
     public function testReadExcel()
