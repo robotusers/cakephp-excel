@@ -32,6 +32,7 @@ use PHPExcel_Reader_CSV;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Writer_CSV;
 use PHPExcel_Writer_Excel2007;
+use PHPExcel_Writer_IWriter;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Test\TestCase;
 use UnexpectedValueException;
@@ -487,6 +488,25 @@ class ManagerTest extends TestCase
 
         $manager->write($table, $worksheet, [
             'finder' => 'list'
+        ]);
+    }
+
+    public function testSaveAndCallbackWriter()
+    {
+        $writer = $this->createMock(PHPExcel_Writer_IWriter::class);
+        $excel = $this->createMock(PHPExcel::class);
+        $file = $this->getFile('test.xlsx');
+
+        $writer->expects($this->once())
+            ->method('save')
+            ->with($file->pwd());
+
+        $manager = new Manager();
+
+        $manager->save($excel, $file, [
+            'callback' => function() use($writer) {
+                return $writer;
+            }
         ]);
     }
 }

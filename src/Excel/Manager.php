@@ -125,7 +125,7 @@ class Manager
             'startRow' => 1,
             'endRow' => null,
             'startColumn' => 'A',
-            'endColumn' => null,
+            'endColumn' => null
         ];
 
         $rows = $worksheet->getRowIterator($options['startRow'], $options['endRow']);
