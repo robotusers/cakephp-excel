@@ -335,24 +335,71 @@ class ManagerTest extends TestCase
                 'A' => 'a1',
                 'B' => 'b1',
                 'C' => 'c1',
-                'D' => 'd1',
-                'E' => 'e1',
-                'F' => 'e1'
+                'D' => 1,
+                'E' => 1.1,
+                'F' => true
             ],
             2 => [
                 '_row' => 10,
                 'A' => 'a2',
                 'B' => 'b2',
                 'C' => 'c2',
-                'D' => 'd2',
-                'E' => 'e2',
-                'F' => 'e2'
+                'D' => 2,
+                'E' => 2.2,
+                'F' => false
             ]
         ];
 
         $entities = $table->newEntities($data);
         $table->saveMany($entities);
         $this->assertCount(2, $table->find());
+
+        $manager->write($table, $worksheet);
+
+        foreach ($data as $row => $dataRow) {
+            unset($dataRow['_row']);
+            foreach ($dataRow as $column => $value) {
+                $cell = $worksheet->getCell($column . $row);
+                $this->assertEquals($value, $cell->getValue());
+            }
+        }
+    }
+
+    public function testWriteArray()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('RegularColumns');
+
+        $data = [
+            1 => [
+                '_row' => 1,
+                'A' => 'a1',
+                'B' => 'b1',
+                'C' => 'c1',
+                'D' => 1,
+                'E' => 1.1,
+                'F' => true
+            ],
+            2 => [
+                '_row' => 10,
+                'A' => 'a2',
+                'B' => 'b2',
+                'C' => 'c2',
+                'D' => 2,
+                'E' => 2.2,
+                'F' => false
+            ]
+        ];
+
+        $entities = $table->newEntities($data);
+        $table->saveMany($entities);
+        $this->assertCount(2, $table->find());
+
+        $table->eventManager()->on('Model.beforeFind', function($e, $q) {
+            return $q->hydrate(false);
+        });
 
         $manager->write($table, $worksheet);
 
