@@ -397,7 +397,7 @@ class ManagerTest extends TestCase
         $table->saveMany($entities);
         $this->assertCount(2, $table->find());
 
-        $table->eventManager()->on('Model.beforeFind', function($e, $q) {
+        $table->eventManager()->on('Model.beforeFind', function ($e, $q) {
             return $q->hydrate(false);
         });
 
@@ -588,7 +588,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
 
         $manager->save($excel, $file, [
-            'callback' => function() use($writer) {
+            'callback' => function () use ($writer) {
                 return $writer;
             }
         ]);

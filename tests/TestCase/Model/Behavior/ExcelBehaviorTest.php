@@ -133,7 +133,6 @@ class ExcelBehaviorTest extends TestCase
             ->with('foo')
             ->willReturn($worksheet);
 
-
         $table->setWorksheet('foo');
         $tableWorksheet = $table->getWorksheet();
 
@@ -169,7 +168,6 @@ class ExcelBehaviorTest extends TestCase
             ->method('getSheetByCodeName')
             ->with('foo')
             ->willReturn($worksheet);
-
 
         $table->setWorksheet('foo');
         $tableWorksheet = $table->getWorksheet();
@@ -207,7 +205,6 @@ class ExcelBehaviorTest extends TestCase
             ->with(1)
             ->willReturn($worksheet);
 
-
         $table->setWorksheet(1);
         $tableWorksheet = $table->getWorksheet();
 
@@ -238,7 +235,6 @@ class ExcelBehaviorTest extends TestCase
         $excel->expects($this->once())
             ->method('getActiveSheet')
             ->willReturn($worksheet);
-
 
         $table->setWorksheet(null);
         $tableWorksheet = $table->getWorksheet();
