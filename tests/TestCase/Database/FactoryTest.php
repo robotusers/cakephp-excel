@@ -40,9 +40,6 @@ use Robotusers\Excel\Test\TestCase;
  */
 class FactoryTest extends TestCase
 {
-    /**
-     * @covers \Robotusers\Excel\Database\Factory::getNumberFormatMap
-     */
     public function testSetNumberFormat()
     {
         $factory = new Factory();
@@ -54,9 +51,6 @@ class FactoryTest extends TestCase
         $this->assertEquals('string', $formats['@']);
     }
 
-    /**
-     * @covers \Robotusers\Excel\Database\Factory::getDataTypeMap
-     */
     public function testSetDataType()
     {
         $factory = new Factory();
@@ -116,10 +110,6 @@ class FactoryTest extends TestCase
         $this->assertEquals('abcd1234_test_worksheet1s', $name);
     }
 
-    /**
-     * @covers \Robotusers\Excel\Database\Factory::getPrimaryKey
-     * @covers \Robotusers\Excel\Database\Factory::setPrimaryKey
-     */
     public function testPrimaryKey()
     {
         $factory = new Factory();
