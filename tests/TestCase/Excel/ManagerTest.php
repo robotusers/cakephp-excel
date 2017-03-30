@@ -26,7 +26,9 @@ namespace Robotusers\Excel\Test\TestCase\Excel;
 
 use Cake\Chronos\Chronos;
 use Cake\Chronos\Date;
+use Cake\Filesystem\File;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 use PHPExcel;
 use PHPExcel_Reader_CSV;
 use PHPExcel_Reader_Excel2007;
@@ -58,6 +60,39 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf(PHPExcel_Reader_Excel2007::class, $reader);
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage File foo does not exist.
+     */
+    public function testGetReaderMissingFile()
+    {
+        $manager = new Manager();
+        $file = $this->createMock(File::class);
+        $file->method('exists')
+            ->willReturn(false);
+        $file->method('name')
+            ->willReturn('foo');
+
+        $manager->getReader($file);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage File foo does not exist.
+     */
+    public function testGetWriterMissingFile()
+    {
+        $manager = new Manager();
+        $file = $this->createMock(File::class);
+        $excel = $this->createMock(PHPExcel::class);
+        $file->method('exists')
+            ->willReturn(false);
+        $file->method('name')
+            ->willReturn('foo');
+
+        $manager->getWriter($excel, $file);
+    }
+
     public function testGetReaderCsv()
     {
         $manager = new Manager();
@@ -78,6 +113,8 @@ class ManagerTest extends TestCase
         $reader = $manager->getReader($file, [
             'callback' => function ($reader) {
                 $reader->setEnclosure('FOO');
+
+                return $reader;
             }
         ]);
         $this->assertInstanceOf(PHPExcel_Reader_CSV::class, $reader);
