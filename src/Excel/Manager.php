@@ -30,6 +30,7 @@ use Cake\Filesystem\File;
 use Cake\ORM\Table;
 use DateTimeInterface;
 use InvalidArgumentException;
+use LogicException;
 use PHPExcel;
 use PHPExcel_Cell;
 use PHPExcel_Cell_DataType;
@@ -153,10 +154,20 @@ class Manager
             'finder' => 'all',
             'finderOptions' => [],
             'propertyMap' => [],
+            'header' => null,
             'columnCallbacks' => [],
             'startRow' => 1,
             'keepOriginalRows' => false
         ];
+
+        if (is_array($options['header'])) {
+            if ($options['startRow'] < 2) {
+                $message = 'Option `startRow` must be > 1 if you want to attach header.';
+                throw new LogicException($message);
+            }
+
+            $this->attachHeader($worksheet, $options['header']);
+        }
 
         $pk = $table->getPrimaryKey();
         $results = $table->find($options['finder'], $options['finderOptions'])->all();
@@ -192,6 +203,35 @@ class Manager
             }
 
             $row++;
+        }
+
+        return $worksheet;
+    }
+
+    /**
+     *
+     * @param PHPExcel_Worksheet $worksheet
+     * @param array $header
+     * @param array $options
+     * @return PHPExcel_Worksheet
+     */
+    public function attachHeader(PHPExcel_Worksheet $worksheet, array $header, array $options = [])
+    {
+        $options += [
+            'row' => 1,
+            'style' => [
+                'font' => [
+                    'bold' => true
+                ]
+            ]
+        ];
+
+        foreach ($header as $column => $value) {
+            $coordinate = strtoupper($column) . $options['row'];
+            $worksheet->getCell($coordinate)
+                ->setValue($value)
+                ->getStyle()
+                ->applyFromArray($options['style']);
         }
 
         return $worksheet;
