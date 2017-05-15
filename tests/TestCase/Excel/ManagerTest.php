@@ -593,4 +593,100 @@ class ManagerTest extends TestCase
             }
         ]);
     }
+
+    public function testWriteAndAttachHeader()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('RegularColumns');
+
+        $manager->write($table, $worksheet, [
+            'startRow' => 2,
+            'header' => [
+                'a' => 'Foo',
+                'b' => 'Bar'
+            ]
+        ]);
+
+        $cellA = $worksheet->getCell('A1');
+        $this->assertEquals('Foo', $cellA->getValue());
+        $this->assertTrue($cellA->getStyle()->getFont()->getBold());
+
+        $cellB = $worksheet->getCell('B1');
+        $this->assertEquals('Bar', $cellB->getValue());
+        $this->assertTrue($cellB->getStyle()->getFont()->getBold());
+    }
+
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Option `startRow` must be > 1 if you want to attach header.
+     */
+    public function testWriteAndAttachHeaderInvalidStartRow()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('RegularColumns');
+
+        $manager->write($table, $worksheet, [
+            'header' => [
+                'a' => 'Foo',
+                'b' => 'Bar'
+            ]
+        ]);
+    }
+
+    public function testAttachHeader()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+
+        $header = [
+            'a' => 'Foo',
+            'b' => 'Bar'
+        ];
+
+        $result = $manager->attachHeader($worksheet, $header);
+        $this->assertSame($worksheet, $result);
+
+        $cellA = $worksheet->getCell('A1');
+        $this->assertEquals('Foo', $cellA->getValue());
+        $this->assertTrue($cellA->getStyle()->getFont()->getBold());
+
+        $cellB = $worksheet->getCell('B1');
+        $this->assertEquals('Bar', $cellB->getValue());
+        $this->assertTrue($cellB->getStyle()->getFont()->getBold());
+    }
+
+    public function testAttachHeaderCustomOptions()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+
+        $header = [
+            'a' => 'Foo',
+            'b' => 'Bar'
+        ];
+
+        $result = $manager->attachHeader($worksheet, $header, [
+            'row' => 2,
+            'style' => [
+                'font' => [
+                    'size' => 100
+                ]
+            ]
+        ]);
+        $this->assertSame($worksheet, $result);
+
+        $cellA = $worksheet->getCell('A2');
+        $this->assertEquals('Foo', $cellA->getValue());
+        $this->assertEquals(100, $cellA->getStyle()->getFont()->getSize());
+
+        $cellB = $worksheet->getCell('B2');
+        $this->assertEquals('Bar', $cellB->getValue());
+        $this->assertEquals(100, $cellB->getStyle()->getFont()->getSize());
+    }
 }
