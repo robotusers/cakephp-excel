@@ -161,7 +161,8 @@ class Manager
             'header' => null,
             'columnCallbacks' => [],
             'startRow' => 1,
-            'keepOriginalRows' => false
+            'keepOriginalRows' => false,
+            'removePrimaryKey' => true
         ];
 
         if (is_array($options['header'])) {
@@ -188,7 +189,9 @@ class Manager
             if ($options['keepOriginalRows']) {
                 $row = $data[$pk];
             }
-            unset($data[$pk]);
+            if ($options['removePrimaryKey']) {
+                unset($data[$pk]);
+            }
 
             foreach ($data as $property => $value) {
                 if (isset($options['propertyMap'][$property])) {
