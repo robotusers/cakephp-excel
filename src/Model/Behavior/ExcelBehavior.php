@@ -25,9 +25,7 @@
 
 namespace Robotusers\Excel\Model\Behavior;
 
-use ArrayObject;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
 use Cake\Filesystem\File;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
@@ -131,7 +129,7 @@ class ExcelBehavior extends Behavior
         $manager->write($this->_table, $worksheet, $options);
 
         $file = $this->getFile();
-        $writer = $manager->getWriter($worksheet->getParent(), $file);
+        $writer = $manager->getWriter($worksheet->getParent(), $file, $options);
 
         $writer->save($file->pwd());
 
