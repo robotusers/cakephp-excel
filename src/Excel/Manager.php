@@ -249,7 +249,7 @@ class Manager
      */
     protected function setCellValue(PHPExcel_Cell $cell, $value)
     {
-        if ($value instanceof DateTimeInterface) {
+        if ($value instanceof DateTime) {
             $value = PHPExcel_Shared_Date::PHPToExcel($value);
         }
         $cell->setValue($value);
