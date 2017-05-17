@@ -131,6 +131,18 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf(PHPExcel_Writer_Excel2007::class, $writer);
     }
 
+    public function testGetWriterCustom()
+    {
+        $excel = $this->createMock(PHPExcel::class);
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $writer = $manager->getWriter($excel, $file, [
+            'writerType' => 'CSV'
+        ]);
+        $this->assertInstanceOf(PHPExcel_Writer_CSV::class, $writer);
+    }
+
     public function testGetWriterCsv()
     {
         $excel = $this->createMock(PHPExcel::class);

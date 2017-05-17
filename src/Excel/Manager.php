@@ -320,7 +320,11 @@ class Manager
             throw new InvalidArgumentException($message);
         }
 
-        $type = PHPExcel_IOFactory::identify($file->pwd());
+        if (isset($options['writerType'])) {
+            $type = $options['writerType'];
+        } else {
+            $type = PHPExcel_IOFactory::identify($file->pwd());
+        }
         $writer = PHPExcel_IOFactory::createWriter($excel, $type);
 
         if ($writer instanceof PHPExcel_Writer_CSV) {
