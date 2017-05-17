@@ -252,8 +252,9 @@ class Manager
      */
     protected function setCellValue(PHPExcel_Cell $cell, $value)
     {
-        if ($value instanceof DateTime) {
-            $value = PHPExcel_Shared_Date::PHPToExcel($value);
+        if ($value instanceof DateTimeInterface) {
+            $value = PHPExcel_Shared_Date::PHPToExcel($value->format('U'));
+            $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD HH:MM:SS');
         }
         $cell->setValue($value);
         if (is_numeric($value)) {
