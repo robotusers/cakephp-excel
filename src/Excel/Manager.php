@@ -129,6 +129,10 @@ class Manager
             'endColumn' => null
         ];
 
+        if ($options['startRow'] > $worksheet->getHighestRow()) {
+            return $worksheet;
+        }
+
         $rows = $worksheet->getRowIterator($options['startRow'], $options['endRow']);
         foreach ($rows as $row) {
             $cells = $row->getCellIterator($options['startColumn'], $options['endColumn']);
