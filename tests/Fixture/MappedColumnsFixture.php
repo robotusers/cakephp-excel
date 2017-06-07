@@ -42,6 +42,7 @@ class MappedColumnsFixture extends TestFixture
         'date_field' => 'date',
         'datetime_field' => 'datetime',
         'time_field' => 'time',
+        'G' => 'string',
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id']]
         ]

@@ -91,10 +91,9 @@ class Manager
                 /* @var $cell PHPExcel_Cell */
 
                 $column = $cell->getColumn();
-                if (isset($options['columnMap'][$column])) {
-                    $property = $options['columnMap'][$column];
-                } else {
-                    $property = $column;
+                $property = $this->resolveKey($options['columnMap'], $column);
+                if ($property === null) {
+                    continue;
                 }
 
                 $value = $cell->getValue();
@@ -194,11 +193,11 @@ class Manager
             }
 
             foreach ($data as $property => $value) {
-                if (isset($options['propertyMap'][$property])) {
-                    $column = $options['propertyMap'][$property];
-                } else {
-                    $column = strtoupper($property);
+                $column = $this->resolveKey($options['propertyMap'], $property);
+                if ($column === null) {
+                    continue;
                 }
+                $column = strtoupper($column);
 
                 $coords = $column . $row;
                 $cell = $worksheet->getCell($coords);
@@ -213,6 +212,27 @@ class Manager
         }
 
         return $worksheet;
+    }
+
+    /**
+     * @param array $keys
+     * @param string $key
+     * @return string|null
+     */
+    protected function resolveKey(array $keys, $key)
+    {
+        $value = true;
+        if (isset($keys[$key])) {
+            $value = $keys[$key];
+        } elseif (isset($keys['*'])) {
+            $value = $keys['*'];
+        }
+
+        if ($value === true) {
+            $value = $key;
+        }
+
+        return strlen($value) ? $value : null;
     }
 
     /**

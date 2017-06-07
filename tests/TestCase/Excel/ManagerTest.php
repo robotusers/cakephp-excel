@@ -285,6 +285,70 @@ class ManagerTest extends TestCase
         $this->assertSame('00:01:00', $first->time_field->format('H:i:s'));
     }
 
+    public function testReadColumnMapSome()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $results = $manager->read($worksheet, $table, [
+            'columnMap' => [
+                'A' => 'string_field',
+                'B' => 'integer_field',
+                'C' => 'float_field',
+                'D' => false,
+                'E' => false,
+                'F' => false
+            ]
+        ]);
+
+        $this->assertCount(5, $results);
+
+        $first = $table->find()->first();
+
+        $this->assertSame(1, $first->id);
+        $this->assertSame('a', $first->string_field);
+        $this->assertSame(1, $first->integer_field);
+        $this->assertSame(1.01, $first->float_field);
+        $this->assertNull($first->date_field);
+        $this->assertNull($first->datetime_field);
+        $this->assertNull($first->time_field);
+    }
+
+    public function testReadColumnMapWildcard()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $results = $manager->read($worksheet, $table, [
+            'columnMap' => [
+                '*' => false,
+                'A' => 'string_field',
+                'B' => 'integer_field',
+                'C' => 'float_field'
+            ]
+        ]);
+
+        $this->assertCount(5, $results);
+
+        $first = $table->find()->first();
+
+        $this->assertSame(1, $first->id);
+        $this->assertSame('a', $first->string_field);
+        $this->assertSame(1, $first->integer_field);
+        $this->assertSame(1.01, $first->float_field);
+        $this->assertNull($first->date_field);
+        $this->assertNull($first->datetime_field);
+        $this->assertNull($first->time_field);
+    }
+
     public function testClear()
     {
         $manager = new Manager();
@@ -424,7 +488,111 @@ class ManagerTest extends TestCase
         }
     }
 
-    public function testWritePropertyMapAndCallbacks()
+    public function testWritePropertyMap()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $data = [
+            1 => [
+                'id' => 1,
+                'string_field' => 'A',
+                'integer_field' => 1,
+                'float_field' => 1.1,
+                'date_field' => new Date('2017-01-01'),
+                'datetime_field' => new Chronos('2017-01-01 00:01:00'),
+                'time_field' => new Chronos('00:01:00'),
+                'G' => 'hello',
+            ]
+        ];
+
+        $expected = [
+            'A' => 'A',
+            'B' => 1,
+            'C' => 1.1,
+            'D' => null,
+            'E' => null,
+            'F' => null,
+            'G' => 'hello',
+        ];
+
+        $entities = $table->newEntities($data);
+        $table->saveMany($entities);
+
+        $map = [
+            'string_field' => 'A',
+            'integer_field' => 'B',
+            'float_field' => 'C',
+            'date_field' => false,
+            'datetime_field' => false,
+            'time_field' => false,
+            'G' => true
+        ];
+
+        $manager->write($table, $worksheet, [
+            'propertyMap' => $map
+        ]);
+
+        foreach ($worksheet->getColumnIterator('A', 'G') as $column) {
+            $column = $column->getColumnIndex();
+            $cell = $worksheet->getCell($column . 1);
+            $this->assertEquals($expected[$column], $cell->getValue());
+        }
+    }
+
+    public function testWritePropertyMapWildcard()
+    {
+        $manager = new Manager();
+        $excel = new PHPExcel();
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $data = [
+            1 => [
+                'id' => 1,
+                'string_field' => 'A',
+                'integer_field' => 1,
+                'float_field' => 1.1,
+                'date_field' => new Date('2017-01-01'),
+                'datetime_field' => new Chronos('2017-01-01 00:01:00'),
+                'time_field' => new Chronos('00:01:00'),
+                'G' => 'hello',
+            ]
+        ];
+
+        $expected = [
+            'A' => 'A',
+            'B' => null,
+            'C' => null,
+            'D' => null,
+            'E' => null,
+            'F' => null,
+            'G' => 'hello',
+        ];
+
+        $entities = $table->newEntities($data);
+        $table->saveMany($entities);
+
+        $map = [
+            '*' => false,
+            'string_field' => 'A',
+            'G' => true
+        ];
+
+        $manager->write($table, $worksheet, [
+            'propertyMap' => $map
+        ]);
+
+        foreach ($worksheet->getColumnIterator('A', 'G') as $column) {
+            $column = $column->getColumnIndex();
+            $cell = $worksheet->getCell($column . 1);
+            $this->assertEquals($expected[$column], $cell->getValue());
+        }
+    }
+
+    public function testWriteCallbacks()
     {
         $manager = new Manager();
         $excel = new PHPExcel();
