@@ -320,7 +320,10 @@ class Manager
             }
         }
         if (isset($options['callback'])) {
-            $result = $options['callback']($reader, $file);
+            trigger_error('Option `callback` has been deprecated. Use `readerCallback` instead', E_USER_DEPRECATED);
+        }
+        if (isset($options['readerCallback'])) {
+            $result = $options['readerCallback']($reader, $file);
             if ($result instanceof PHPExcel_Reader_IReader) {
                 $reader = $result;
             }
@@ -357,7 +360,10 @@ class Manager
             }
         }
         if (isset($options['callback'])) {
-            $result = $options['callback']($writer, $file);
+            trigger_error('Option `callback` has been deprecated. Use `writerCallback` instead', E_USER_DEPRECATED);
+        }
+        if (isset($options['writerCallback'])) {
+            $result = $options['writerCallback']($writer, $file);
             if ($result instanceof PHPExcel_Writer_IWriter) {
                 $writer = $result;
             }

@@ -111,7 +111,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.csv');
 
         $reader = $manager->getReader($file, [
-            'callback' => function ($reader) {
+            'readerCallback' => function ($reader) {
                 $reader->setEnclosure('FOO');
 
                 return $reader;
@@ -163,7 +163,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.csv');
 
         $writer = $manager->getWriter($excel, $file, [
-            'callback' => function ($reader) {
+            'writerCallback' => function ($reader) {
                 $reader->setEnclosure('FOO');
             }
         ]);
@@ -769,7 +769,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
 
         $manager->save($excel, $file, [
-            'callback' => function () use ($writer) {
+            'writerCallback' => function () use ($writer) {
                 return $writer;
             }
         ]);
