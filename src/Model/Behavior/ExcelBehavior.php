@@ -96,7 +96,16 @@ class ExcelBehavior extends Behavior
         }
 
         if (!isset($config['propertyMap'])) {
-            $propertyMap = array_flip($this->getConfig('columnMap'));
+            $propertyMap = [];
+            foreach ($this->getConfig('columnMap') as $column => $property) {
+                if ($column === '*') {
+                    $propertyMap['*'] = $property;
+                } elseif (is_string($property)) {
+                    $propertyMap[$property] = $column;
+                } else {
+                    $propertyMap[$column] = $property;
+                }
+            }
             $this->setConfig('propertyMap', $propertyMap);
         }
     }

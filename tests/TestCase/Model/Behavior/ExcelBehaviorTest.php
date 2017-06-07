@@ -68,6 +68,35 @@ class ExcelBehaviorTest extends TestCase
         return $table;
     }
 
+    public function testPropertyMap()
+    {
+        $table = TableRegistry::get('MappedColumns');
+        $table->addBehavior('Robotusers/Excel.Excel', [
+            'columnMap' => [
+                '*' => false,
+                'A' => true,
+                'B' => false,
+                'C' => 'float_field',
+                'D' => 'date_field',
+                'E' => 'datetime_field',
+                'F' => 'time_field'
+            ]
+        ]);
+
+        $expected = [
+            '*' => false,
+            'A' => true,
+            'B' => false,
+            'float_field' => 'C',
+            'date_field' => 'D',
+            'datetime_field' => 'E',
+            'time_field' => 'F'
+        ];
+        
+        $map = $table->behaviors()->Excel->getConfig('propertyMap');
+        $this->assertEquals($expected, $map);
+    }
+
     /**
      * @covers \Robotusers\Excel\Model\Behavior\ExcelBehavior::getFile
      * @covers \Robotusers\Excel\Model\Behavior\ExcelBehavior::setFile
