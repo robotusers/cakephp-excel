@@ -22,19 +22,16 @@ matrix:
     - php: 7.1
       env: PHPSTAN=2 DEFAULT=0
     - php: 7.1
-      env: PHPSTAN=4 DEFAULT=0
-    - php: 7.1
-      env: PHPSTAN=5 DEFAULT=0
+      env: PHPSTAN=7 DEFAULT=0
       
   allow_failures:
     - env: PHPCS=1 DEFAULT=0
-    - env: PHPSTAN=4 DEFAULT=0
-    - env: PHPSTAN=5 DEFAULT=0
+    - env: PHPSTAN=7 DEFAULT=0
 
 before_script:
   - if [[ $DEFAULT = 1 ]]; then composer install; fi
   - if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:~2.1; fi
-  - if [[ $PHPSTAN > 0 ]]; then composer require phpstan/phpstan:^0.6; fi
+  - if [[ $PHPSTAN > 0 ]]; then composer require phpstan/phpstan:^0.7; fi
 
 script:
   - if [[ $DEFAULT = 1 ]]; then vendor/bin/phpunit --coverage-clover=coverage.xml; fi
