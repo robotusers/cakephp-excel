@@ -120,6 +120,11 @@ class ExcelBehavior extends Behavior
         $options += $this->getConfig();
         $worksheet = $this->getWorksheet();
 
+        $this->_table->dispatchEvent('Model.beforeReadWorksheet', [
+            'worksheet' => $worksheet,
+            'options' => $options
+        ]);
+
         return $this->getManager()->read($worksheet, $this->_table, $options);
     }
 
@@ -135,9 +140,18 @@ class ExcelBehavior extends Behavior
         $worksheet = $this->getWorksheet();
         $manager = $this->getManager();
         $manager->clear($worksheet, $options);
+        $this->_table->dispatchEvent('Model.beforeWriteWorksheet', [
+            'worksheet' => $worksheet,
+            'options' => $options
+        ]);
         $manager->write($this->_table, $worksheet, $options);
 
         $file = $this->getFile();
+        $this->_table->dispatchEvent('Model.beforeWriteExcel', [
+            'worksheet' => $worksheet,
+            'file' => $file,
+            'options' => $options
+        ]);
         $writer = $manager->getWriter($worksheet->getParent(), $file, $options);
 
         $writer->save($file->pwd());

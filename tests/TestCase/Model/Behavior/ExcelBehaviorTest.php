@@ -25,6 +25,9 @@
 namespace Robotusers\Excel\Test\TestCase\Model\Behavior;
 
 use Cake\Datasource\EntityInterface;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
+use Cake\Filesystem\File;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
@@ -45,6 +48,12 @@ class ExcelBehaviorTest extends TestCase
     public $fixtures = [
         'plugin.Robotusers/Excel.mapped_columns'
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        EventManager::instance()->setEventList(new EventList);
+    }
 
     /**
      *
@@ -92,7 +101,7 @@ class ExcelBehaviorTest extends TestCase
             'datetime_field' => 'E',
             'time_field' => 'F'
         ];
-        
+
         $map = $table->behaviors()->Excel->getConfig('propertyMap');
         $this->assertEquals($expected, $map);
     }
@@ -142,7 +151,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(\PHPExcel::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(PHPExcel_Worksheet::class);
-        $file = $this->createMock(\Cake\Filesystem\File::class);
+        $file = $this->createMock(File::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -173,7 +182,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(\PHPExcel::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(PHPExcel_Worksheet::class);
-        $file = $this->createMock(\Cake\Filesystem\File::class);
+        $file = $this->createMock(File::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -209,7 +218,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(\PHPExcel::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(PHPExcel_Worksheet::class);
-        $file = $this->createMock(\Cake\Filesystem\File::class);
+        $file = $this->createMock(File::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -245,7 +254,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(\PHPExcel::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(PHPExcel_Worksheet::class);
-        $file = $this->createMock(\Cake\Filesystem\File::class);
+        $file = $this->createMock(File::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -348,6 +357,8 @@ class ExcelBehaviorTest extends TestCase
         $table->setWorksheet($worksheet);
         $read = $table->readExcel($options);
         $this->assertEquals($results, $read);
+
+        $this->assertEventFired('Model.beforeReadWorksheet');
     }
 
     public function testWriteExcel()
@@ -407,5 +418,8 @@ class ExcelBehaviorTest extends TestCase
         }
 
         $file->delete();
+
+        $this->assertEventFired('Model.beforeWriteWorksheet');
+        $this->assertEventFired('Model.beforeWriteExcel');
     }
 }
