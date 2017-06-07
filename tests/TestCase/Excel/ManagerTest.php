@@ -468,7 +468,8 @@ class ManagerTest extends TestCase
         $manager->write($table, $worksheet, [
             'propertyMap' => $map,
             'columnCallbacks' => [
-                'D' => function ($cell) {
+                'D' => function ($cell, $data) {
+                    $this->assertInternalType('array', $data);
                     $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD');
                 },
                 'E' => function ($cell) {

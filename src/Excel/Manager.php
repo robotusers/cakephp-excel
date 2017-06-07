@@ -205,7 +205,7 @@ class Manager
                 $this->setCellValue($cell, $value);
                 if (isset($options['columnCallbacks'][$column])) {
                     $callback = $options['columnCallbacks'][$column];
-                    $callback($cell);
+                    $callback($cell, $data);
                 }
             }
 
