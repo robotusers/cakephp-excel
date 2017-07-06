@@ -1,4 +1,4 @@
-# CakePHP Excel plugin 
+# CakePHP Excel plugin
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/robotusers/cakephp-excel.svg?branch=master)](https://travis-ci.org/robotusers/cakephp-excel)
@@ -22,7 +22,7 @@ For example we are loading an excel file that contains some record data.
 
 |   | A             | B                  | C    |
 |:--|:------------: |:------------------:| :---:|
-| 1 | Led Zeppelin	| Led Zeppelin II    | 1969 |
+| 1 | Led Zeppelin  | Led Zeppelin II    | 1969 |
 | 2 | Deep Purple   | Machine Head       | 1972 |
 | 3 | Pink Floyd    | Wish You Were Here | 1975 |
 
@@ -66,6 +66,31 @@ $table = $registry->get('path/to/records.xlsx', 'Albums', [
     'columnTypeMap' => [
         'C' => 'date'
     ]
+]);
+```
+
+You can select PhpExcel value method
+```php
+use Robotusers/Excel/Registry;
+
+$registry = Registry::instance();
+$table = $registry->get('path/to/records.xlsx', 'Albums', [
+    'primaryKey' => 'id',
+    'columnMap' => [
+        'A' => 'band',
+        'B' => 'album',
+        'C' => 'year',
+        'D' => 'price',
+    ],
+    'columnTypeMap' => [
+        'C' => 'date'
+    ],
+    'columnValueMap' => [
+    'A' => 'value', // $cell->getValue();
+    'B' => 'formated', // $cell->getFormattedValue(); (default)
+    'C' => 'date', // PHPExcel_Shared_Date::ExcelToPHP($cell->getValue());
+    'D' => 'calculated', // $cell->getCalculatedValue();
+  ]
 ]);
 ```
 
