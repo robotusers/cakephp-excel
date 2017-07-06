@@ -67,6 +67,7 @@ class Manager
             'startColumn' => 'A',
             'endColumn' => null,
             'columnMap' => [],
+            'columnValueMap' => [],
             'marshallerOptions' => [],
             'saveOptions' => [],
             'keepOriginalRows' => false
@@ -98,7 +99,7 @@ class Manager
 
                 $value = $cell->getValue();
                 if (in_array($property, $columns) && $value !== null) {
-                    $data[$property] = $cell->getFormattedValue();
+                    $data[$property] = $this->getCellValue($cell, $column, $options);
                     $hasData = true;
                 }
             }
@@ -111,6 +112,19 @@ class Manager
         }
 
         return $entities;
+    }
+
+    private function getCellValue($cell, $column, $options)
+    {
+        $valueMethod = (isset($options['columnValueMap'][$column])) ? $options['columnValueMap'][$column] : 'formated';
+
+        switch ($valueMethod) {
+            case 'formated': return $cell->getFormattedValue();
+            case 'calculated': return $cell->getCalculatedValue();
+            case 'value': return $cell->getValue();
+            case 'date' : return PHPExcel_Shared_Date::ExcelToPHP($cell->getValue());
+            default: return $cell->getFormattedValue();
+        }
     }
 
     /**

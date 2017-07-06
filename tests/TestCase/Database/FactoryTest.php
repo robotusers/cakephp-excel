@@ -136,7 +136,10 @@ class FactoryTest extends TestCase
             'C' => 'string',
             'D' => 'string',
             'E' => 'string',
-            'F' => 'string'
+            'F' => 'string',
+            'G' => 'string',
+            'H' => 'string',
+            'I' => 'string',
         ];
         $this->assertColumns($columns, $schema);
     }
@@ -211,7 +214,10 @@ class FactoryTest extends TestCase
             'C' => 'integer',
             'D' => 'integer',
             'E' => 'integer',
-            'F' => 'integer'
+            'F' => 'integer',
+            'G' => 'integer',
+            'H' => 'integer',
+            'I' => 'integer',
         ];
         $this->assertColumns($columns, $schema);
     }
@@ -254,7 +260,10 @@ class FactoryTest extends TestCase
             'C' => 'string',
             'D' => 'string',
             'E' => 'string',
-            'F' => 'string'
+            'F' => 'string',
+            'G' => 'string',
+            'H' => 'string',
+            'I' => 'string',
         ];
         $this->assertColumns($columns, $schema);
     }
@@ -275,7 +284,8 @@ class FactoryTest extends TestCase
             'columnTypeMap' => [
                 'D' => 'datetime',
                 'E' => 'date',
-                'F' => 'time'
+                'F' => 'time',
+                'H' => 'date',
             ]
         ]);
 
@@ -286,7 +296,10 @@ class FactoryTest extends TestCase
             'C' => 'float',
             'D' => 'datetime',
             'E' => 'date',
-            'F' => 'time'
+            'F' => 'time',
+            'G' => 'float',
+            'H' => 'date',
+            'I' => 'string',
         ];
         $this->assertColumns($columns, $schema);
     }

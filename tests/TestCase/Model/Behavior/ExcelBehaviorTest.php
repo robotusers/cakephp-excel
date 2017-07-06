@@ -70,7 +70,10 @@ class ExcelBehaviorTest extends TestCase
                 'C' => 'float_field',
                 'D' => 'date_field',
                 'E' => 'datetime_field',
-                'F' => 'time_field'
+                'F' => 'time_field',
+                'G' => 'formate_field',
+                'H' => 'french_date_field',
+                'I' => 'formule_field',
             ]
         ]);
 

@@ -349,6 +349,116 @@ class ManagerTest extends TestCase
         $this->assertNull($first->time_field);
     }
 
+    public function testReadColumnValueMapCalculated()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $results = $manager->read($worksheet, $table, [
+            'columnMap' => [
+                'G' => 'formate_field',
+                'H' => 'french_date_field',
+                'I' => 'formule_field',
+            ],
+            'columnValueMap' => [
+                'G' => 'calculated',
+                'H' => 'calculated',
+                'I' => 'calculated',
+            ],
+        ]);
+
+        $first = $table->find()->first();
+
+        $this->assertSame(56743.6666666667, $first->formate_field);
+        $this->assertSame('1970-01-01', $first->french_date_field->format('Y-m-d'));
+        $this->assertSame(2.01, round($first->formule_field, 2));
+    }
+
+    public function testReadColumnValueMapValue()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $results = $manager->read($worksheet, $table, [
+            'columnMap' => [
+                'G' => 'formate_field',
+                'H' => 'french_date_field',
+                'I' => 'formule_field',
+            ],
+            'columnValueMap' => [
+                'G' => 'value',
+                'H' => 'value',
+                'I' => 'value',
+            ],
+        ]);
+
+        $first = $table->find()->first();
+
+        $this->assertSame(56743.6666666667, $first->formate_field);
+        $this->assertSame('1970-01-01', $first->french_date_field->format('Y-m-d'));
+        $this->assertSame(0.00, round($first->formule_field, 2));
+    }
+
+    public function testReadColumnValueMapFormated()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $results = $manager->read($worksheet, $table, [
+            'columnMap' => [
+                'G' => 'formate_field',
+                'H' => 'french_date_field',
+                'I' => 'formule_field',
+            ],
+            'columnValueMap' => [
+                'G' => 'formated',
+                'H' => 'formated',
+                'I' => 'formated',
+            ],
+        ]);
+
+        $first = $table->find()->first();
+
+        $this->assertSame(57.0, $first->formate_field);
+        $this->assertSame('2017-01-17', $first->french_date_field->format('Y-m-d'));
+        $this->assertSame(2.01, round($first->formule_field, 2));
+    }
+
+    public function testReadColumnValueMapDate()
+    {
+        $manager = new Manager();
+        $file = $this->getFile('test.xlsx');
+
+        $excel = $manager->getExcel($file);
+        $worksheet = $excel->getSheet();
+        $table = TableRegistry::get('MappedColumns');
+
+        $results = $manager->read($worksheet, $table, [
+            'columnMap' => [
+                'H' => 'french_date_field',
+            ],
+            'columnValueMap' => [
+                'H' => 'date',
+            ],
+        ]);
+
+        $first = $table->find()->first();
+
+        $this->assertSame('2017-01-01', $first->french_date_field->format('Y-m-d'));
+    }
+
     public function testClear()
     {
         $manager = new Manager();
@@ -528,7 +638,10 @@ class ManagerTest extends TestCase
             'date_field' => false,
             'datetime_field' => false,
             'time_field' => false,
-            'G' => true
+            'G' => true,
+            'formate_field' => false,
+            'french_date_field' => false,
+            'formule_field' => false,
         ];
 
         $manager->write($table, $worksheet, [
@@ -630,7 +743,10 @@ class ManagerTest extends TestCase
             'float_field' => 'C',
             'date_field' => 'D',
             'datetime_field' => 'E',
-            'time_field' => 'F'
+            'time_field' => 'F',
+            'formate_field' => 'G',
+            'french_date_field' => 'H',
+            'formule_field' => 'I',
         ];
 
         $manager->write($table, $worksheet, [
