@@ -114,12 +114,12 @@ class Manager
         return $entities;
     }
 
-    private function getCellValue($cell, $column, $options)
+    protected function getCellValue($cell, $column, $options)
     {
         $valueMethod = (isset($options['columnValueMap'][$column])) ? $options['columnValueMap'][$column] : 'formated';
 
         switch ($valueMethod) {
-            case 'formated': return $cell->getFormattedValue();
+            case 'formatted': return $cell->getFormattedValue();
             case 'calculated': return $cell->getCalculatedValue();
             case 'value': return $cell->getValue();
             case 'date' : return PHPExcel_Shared_Date::ExcelToPHP($cell->getValue());
