@@ -116,7 +116,7 @@ class Manager
 
     protected function getCellValue($cell, $column, $options)
     {
-        $valueMethod = (isset($options['columnValueMap'][$column])) ? $options['columnValueMap'][$column] : 'formated';
+        $valueMethod = (isset($options['columnValueMap'][$column])) ? $options['columnValueMap'][$column] : 'formatted';
 
         switch ($valueMethod) {
             case 'formatted': return $cell->getFormattedValue();

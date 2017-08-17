@@ -407,7 +407,7 @@ class ManagerTest extends TestCase
         $this->assertSame(0.00, round($first->formule_field, 2));
     }
 
-    public function testReadColumnValueMapFormated()
+    public function testReadColumnValueMapFormatted()
     {
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
@@ -423,9 +423,9 @@ class ManagerTest extends TestCase
                 'I' => 'formule_field',
             ],
             'columnValueMap' => [
-                'G' => 'formated',
-                'H' => 'formated',
-                'I' => 'formated',
+                'G' => 'formatted',
+                'H' => 'formatted',
+                'I' => 'formatted',
             ],
         ]);
 

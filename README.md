@@ -87,7 +87,7 @@ $table = $registry->get('path/to/records.xlsx', 'Albums', [
     ],
     'columnValueMap' => [
     'A' => 'value', // $cell->getValue();
-    'B' => 'formated', // $cell->getFormattedValue(); (default)
+    'B' => 'formatted', // $cell->getFormattedValue(); (default)
     'C' => 'date', // PHPExcel_Shared_Date::ExcelToPHP($cell->getValue());
     'D' => 'calculated', // $cell->getCalculatedValue();
   ]
