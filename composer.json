@@ -3,6 +3,7 @@
 	"description": "Robotusers CakePHP Excel plugin",
 	"homepage": "https://github.com/robotusers/cakephp-excel",
 	"type": "cakephp-plugin",
+	"license": "MIT",
 	"require": {
 		"php": ">=5.5",
 		"cakephp/filesystem": "^3.4",
