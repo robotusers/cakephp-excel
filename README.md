@@ -1,5 +1,7 @@
 # CakePHP Excel plugin 
 
+[![Latest Stable Version](https://poser.pugx.org/robotusers/cakephp-excel/v/stable)](https://packagist.org/packages/robotusers/cakephp-excel)
+[![Total Downloads](https://poser.pugx.org/robotusers/cakephp-excel/downloads)](https://packagist.org/packages/robotusers/cakephp-excel)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/robotusers/cakephp-excel.svg?branch=master)](https://travis-ci.org/robotusers/cakephp-excel)
 [![codecov](https://codecov.io/gh/robotusers/cakephp-excel/branch/master/graph/badge.svg)](https://codecov.io/gh/robotusers/cakephp-excel)
