@@ -367,7 +367,9 @@ class ExcelBehaviorTest extends TestCase
         $table = $this->createTable();
         $table->setFile($file);
 
-        $excel = $table->getManager()->getExcel($file);
+        $excel = $table->getManager()->getExcel($file, [
+            'delimiter' => ','
+        ]);
         $table->setWorksheet($excel->getActiveSheet());
 
         $data = [
