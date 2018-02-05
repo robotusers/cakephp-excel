@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 RobotUsers
@@ -32,7 +32,7 @@ use Robotusers\Excel\Registry;
 $name = Registry::CONNECTON_NAME;
 $hasConnectionConfig = ConnectionManager::config($name);
 if (!$hasConnectionConfig && !in_array('sqlite', PDO::getAvailableDrivers())) {
-    $msg = 'Excel not enabled. You need to either install pdo_sqlite, or define the "%s" connection name.';
+    $msg = 'Spreadsheet not enabled. You need to either install pdo_sqlite, or define the "%s" connection name.';
     Log::warning(sprintf($msg, $name));
     return;
 }

@@ -7,7 +7,10 @@
 [![codecov](https://codecov.io/gh/robotusers/cakephp-excel/branch/master/graph/badge.svg)](https://codecov.io/gh/robotusers/cakephp-excel)
 
 CakePHP Excel plugin allows for spreadsheet files manipulation with the power of CakePHP ORM.
-This plugin is build using [PHPExcel](https://github.com/PHPOffice/PHPExcel) library and can work with multiple types of spreadsheet files (excel, csv etc).
+This plugin is build using [PHPSpreadsheet](https://github.com/PHPOffice/PHPSpreadsheet) library and can work with multiple types of spreadsheet files (excel, csv etc).
+
+**NOTE:**
+CakePHP Excel plugin versions 0.4.0 and lower used now abandoned [PHPExcel](https://github.com/PHPOffice/PHPExcel) library.
 
 ## Installation
 
@@ -22,11 +25,11 @@ Excel plugin lets you manipulate spreadsheet files multiple ways. The simplest u
 
 For example we are loading an excel file that contains some record data.
 
-|   | A             | B                  | C    |
-|:--|:------------: |:------------------:| :---:|
-| 1 | Led Zeppelin	| Led Zeppelin II    | 1969 |
-| 2 | Deep Purple   | Machine Head       | 1972 |
-| 3 | Pink Floyd    | Wish You Were Here | 1975 |
+|   | A             | B                     | C    |
+|:--|:------------: |:---------------------:| :---:|
+| 1 | Led Zeppelin  | Led Zeppelin II       | 1969 |
+| 2 | Deep Purple   | Machine Head          | 1972 |
+| 3 | Pink Floyd    | Wish You Were Here    | 1975 |
 
 ```php
 use Robotusers/Excel/Registry;
@@ -100,10 +103,10 @@ $row = $table->newEntity([
 $table->save($row);
 ```
 
-Now the new record is saved, but excel file has not been updated yet. You have to call `writeExcel()` method:
+Now the new record is saved, but excel file has not been updated yet. You have to call `writeSpreadsheet()` method:
 
 ```php
-$table->writeExcel();
+$table->writeSpreadsheet();
 ```
 
 You may also want to read or write only some of the rows and columns.
@@ -176,10 +179,10 @@ If you want to load data into your table you have to set a worksheet instance.
 use Cake\Filesystem\File;
 
 $file = new File('path/to/file.xls');
-$excel = $table->getManager()->getExcel($file); // PHPExcel instance
-$worksheet = $excel->getActiveSheet(); // PHPExcel_Worksheet instance
+$spreadsheet = $table->getManager()->getSpreadsheet($file); // \PhpOffice\PhpSpreadsheet\Spreadsheet instance
+$worksheet = $spreadsheet->getActiveSheet(); // \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet instance
 
-$table->setWorksheet($worksheet)->readExcel();
+$table->setWorksheet($worksheet)->readSpreadsheet();
 ```
 
 Now your table is populated with excel data.
@@ -187,7 +190,7 @@ Now your table is populated with excel data.
 If you want to write your data back to excel file you have to set a file.
 
 ```php
-$table->setFile($file)->writeExcel();
+$table->setFile($file)->writeSpreadsheet();
 ```
 
 ## Working with different tables
@@ -201,8 +204,8 @@ $table = TableRegistry::get('SomeTable');
 $manager = new Manager();
 
 $file = new File('file.xlsx');
-$excel = $manager->getExcel($file);
-$worksheet = $excel->getActiveSheet();
+$spreadsheet = $manager->getSpreadsheet($file);
+$worksheet = $spreadsheet->getActiveSheet();
 
 $manager->read($worksheet, $table, [
     'columnMap' => [
@@ -223,5 +226,5 @@ $manager->write($table, $worksheet, [
     ]
 ]);
 //to actually save the file you have to call save()
-$writer = $manager->save($excel, $file);
+$writer = $manager->save($spreadsheet, $file);
 ```

@@ -30,8 +30,8 @@ use Cake\Filesystem\File;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use InvalidArgumentException;
-use PHPExcel;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Traits\DiscoverWorksheetTrait;
 use RuntimeException;
@@ -54,7 +54,7 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @var PHPExcel_Worksheet
+     * @var Worksheet
      */
     protected $worksheet;
 
@@ -115,7 +115,7 @@ class ExcelBehavior extends Behavior
      * @param array $options
      * @return EntityInterface[]
      */
-    public function readExcel(array $options = [])
+    public function readSpreadsheet(array $options = [])
     {
         $options += $this->getConfig();
         $worksheet = $this->getWorksheet();
@@ -129,11 +129,21 @@ class ExcelBehavior extends Behavior
     }
 
     /**
+     * @param array $options
+     * @return EntityInterface[]
+     * @deprecated 0.5.0 Use `readSpreadsheet()` instead.
+     */
+    public function readExcel(array $options = [])
+    {
+        return $this->readSpreadsheet($options);
+    }
+
+    /**
      *
      * @param array $options
      * @return File
      */
-    public function writeExcel(array $options = [])
+    public function writeSpreadsheet(array $options = [])
     {
         $options += $this->getConfig();
 
@@ -161,6 +171,17 @@ class ExcelBehavior extends Behavior
 
     /**
      *
+     * @param array $options
+     * @return File
+     * @deprecated 0.5.0 Use `writeSpreadsheet()` instead.
+     */
+    public function writeExcel(array $options = [])
+    {
+        return $this->writeSpreadsheet($options);
+    }
+
+    /**
+     *
      * @return Manager
      */
     public function getManager()
@@ -174,7 +195,7 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @return PHPExcel_Worksheet
+     * @return Worksheet
      * @throws RuntimeException
      */
     public function getWorksheet()
@@ -188,15 +209,15 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @param string|int|PHPExcel_Worksheet $worksheet
+     * @param string|int|Worksheet $worksheet
      * @param array $options
      * @return Table
      */
     public function setWorksheet($worksheet = null, array $options = [])
     {
-        if (!$worksheet instanceof PHPExcel_Worksheet) {
+        if (!$worksheet instanceof Worksheet) {
             $file = $this->getFile();
-            $excel = $this->getManager()->getExcel($file, $options);
+            $excel = $this->getManager()->getSpreadsheet($file, $options);
             $worksheet = $this->discoverWorksheet($excel, $worksheet);
         }
         $this->worksheet = $worksheet;
@@ -206,9 +227,19 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @return PHPExcel
+     * @return Spreadsheet
+     * @deprecated 0.5.0 Use `getSpreadsheet()` instead.
      */
     public function getExcel()
+    {
+        return $this->getSpreadsheet();
+    }
+
+    /**
+     *
+     * @return Spreadsheet
+     */
+    public function getSpreadsheet()
     {
         return $this->getWorksheet()->getParent();
     }

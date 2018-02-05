@@ -26,10 +26,10 @@ namespace Robotusers\Excel\Test\TestCase\Database;
 
 use Cake\Database\Connection;
 use Cake\Database\Schema\TableSchema;
-use PHPExcel;
-use PHPExcel_Cell_DataType;
-use PHPExcel_Style_NumberFormat;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Database\Factory;
 use Robotusers\Excel\Test\TestCase;
 
@@ -87,8 +87,8 @@ class FactoryTest extends TestCase
 
     public function testGetTableName()
     {
-        $excel = $this->createMock(PHPExcel::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $excel = $this->createMock(Spreadsheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $id = 'abcd1234';
         $title = 'Test worksheet 1';
 
@@ -266,11 +266,11 @@ class FactoryTest extends TestCase
 
         $schema = $factory->createSchema($worksheet, [
             'numberFormatMap' => [
-                PHPExcel_Style_NumberFormat::FORMAT_NUMBER => 'integer'
+                NumberFormat::FORMAT_NUMBER => 'integer'
             ],
             'dataTypeMap' => [
-                PHPExcel_Cell_DataType::TYPE_NUMERIC => 'float',
-                PHPExcel_Cell_DataType::TYPE_NULL => false
+                DataType::TYPE_NUMERIC => 'float',
+                DataType::TYPE_NULL => false
             ],
             'columnTypeMap' => [
                 'D' => 'datetime',

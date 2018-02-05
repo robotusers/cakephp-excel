@@ -29,9 +29,9 @@ use Cake\Database\Driver\Sqlite;
 use Cake\Database\Schema\TableSchema;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\Locator\LocatorInterface;
-use PHPExcel;
-use PHPExcel_Reader_IReader;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Reader\IReader;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Database\Factory;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Model\Sheet;
@@ -77,9 +77,9 @@ class RegistryTest extends TestCase
             'foo' => 'bar'
         ];
 
-        $reader = $this->createMock(PHPExcel_Reader_IReader::class);
-        $excel = $this->createMock(PHPExcel::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $reader = $this->createMock(IReader::class);
+        $excel = $this->createMock(Spreadsheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $schema = $this->createMock(TableSchema::class);
         $table = $this->getMockBuilder(Sheet::class)
             ->disableOriginalConstructor()
@@ -87,7 +87,7 @@ class RegistryTest extends TestCase
                 'setSchema',
                 'setFile',
                 'setWorksheet',
-                'readExcel'
+                'readSpreadsheet'
             ])
             ->getMock();
 
@@ -147,7 +147,7 @@ class RegistryTest extends TestCase
             ->with($worksheet)
             ->willReturn($table);
         $table->expects($this->any())
-            ->method('readExcel');
+            ->method('readSpreadsheet');
 
         $sheet = $registry->get($file, 'foo', $options, $locatorOptions);
 
@@ -163,9 +163,9 @@ class RegistryTest extends TestCase
             'foo' => 'bar'
         ];
 
-        $reader = $this->createMock(PHPExcel_Reader_IReader::class);
-        $excel = $this->createMock(PHPExcel::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $reader = $this->createMock(IReader::class);
+        $excel = $this->createMock(Spreadsheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $schema = $this->createMock(TableSchema::class);
         $table = $this->getMockBuilder(Sheet::class)
             ->disableOriginalConstructor()
@@ -173,7 +173,7 @@ class RegistryTest extends TestCase
                 'setSchema',
                 'setFile',
                 'setWorksheet',
-                'readExcel'
+                'readSpreadsheet'
             ])
             ->getMock();
 
@@ -210,7 +210,7 @@ class RegistryTest extends TestCase
         $table->method('setWorksheet')
             ->willReturn($table);
         $table->expects($this->any())
-            ->method('readExcel');
+            ->method('readSpreadsheet');
 
         $sheet = $registry->get('test.xlsx', $options);
 

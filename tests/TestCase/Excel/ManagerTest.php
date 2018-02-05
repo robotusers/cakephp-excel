@@ -29,12 +29,13 @@ use Cake\Chronos\Date;
 use Cake\Filesystem\File;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
-use PHPExcel;
-use PHPExcel_Reader_CSV;
-use PHPExcel_Reader_Excel2007;
-use PHPExcel_Writer_CSV;
-use PHPExcel_Writer_Excel2007;
-use PHPExcel_Writer_IWriter;
+use LogicException;
+use PhpOffice\PhpSpreadsheet\Reader\Csv as Csv2;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as Xlsx2;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\IWriter;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Test\TestCase;
 use UnexpectedValueException;
@@ -57,7 +58,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $reader = $manager->getReader($file);
-        $this->assertInstanceOf(PHPExcel_Reader_Excel2007::class, $reader);
+        $this->assertInstanceOf(Xlsx2::class, $reader);
     }
 
     /**
@@ -84,7 +85,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $file = $this->createMock(File::class);
-        $excel = $this->createMock(PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $file->method('exists')
             ->willReturn(false);
         $file->method('name')
@@ -101,7 +102,7 @@ class ManagerTest extends TestCase
         $reader = $manager->getReader($file, [
             'delimiter' => 'FOO'
         ]);
-        $this->assertInstanceOf(PHPExcel_Reader_CSV::class, $reader);
+        $this->assertInstanceOf(Csv2::class, $reader);
         $this->assertEquals('FOO', $reader->getDelimiter());
     }
 
@@ -117,48 +118,48 @@ class ManagerTest extends TestCase
                 return $reader;
             }
         ]);
-        $this->assertInstanceOf(PHPExcel_Reader_CSV::class, $reader);
+        $this->assertInstanceOf(Csv2::class, $reader);
         $this->assertEquals('FOO', $reader->getEnclosure());
     }
 
     public function testGetWriterXlsx()
     {
-        $excel = $this->createMock(PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
         $writer = $manager->getWriter($excel, $file);
-        $this->assertInstanceOf(PHPExcel_Writer_Excel2007::class, $writer);
+        $this->assertInstanceOf(Xlsx::class, $writer);
     }
 
     public function testGetWriterCustom()
     {
-        $excel = $this->createMock(PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
         $writer = $manager->getWriter($excel, $file, [
-            'writerType' => 'CSV'
+            'writerType' => 'Csv'
         ]);
-        $this->assertInstanceOf(PHPExcel_Writer_CSV::class, $writer);
+        $this->assertInstanceOf(Csv::class, $writer);
     }
 
     public function testGetWriterCsv()
     {
-        $excel = $this->createMock(PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = new Manager();
         $file = $this->getFile('test.csv');
 
         $writer = $manager->getWriter($excel, $file, [
             'delimiter' => 'FOO'
         ]);
-        $this->assertInstanceOf(PHPExcel_Writer_CSV::class, $writer);
+        $this->assertInstanceOf(Csv::class, $writer);
         $this->assertEquals('FOO', $writer->getDelimiter());
     }
 
     public function testGetWriterCallback()
     {
-        $excel = $this->createMock(PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = new Manager();
         $file = $this->getFile('test.csv');
 
@@ -167,7 +168,7 @@ class ManagerTest extends TestCase
                 $reader->setEnclosure('FOO');
             }
         ]);
-        $this->assertInstanceOf(PHPExcel_Writer_CSV::class, $writer);
+        $this->assertInstanceOf(Csv::class, $writer);
         $this->assertEquals('FOO', $writer->getEnclosure());
     }
 
@@ -176,8 +177,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.csv');
 
-        $excel = $manager->getExcel($file);
-        $this->assertInstanceOf(PHPExcel::class, $excel);
+        $excel = $manager->getSpreadsheet($file);
+        $this->assertInstanceOf(Spreadsheet::class, $excel);
     }
 
     public function testRead()
@@ -185,8 +186,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $results = $manager->read($worksheet, $table);
@@ -209,8 +210,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -238,8 +239,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $manager->read($worksheet, $table, [
@@ -257,8 +258,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -290,8 +291,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -323,8 +324,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -354,8 +355,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
 
         $manager->clear($worksheet);
 
@@ -371,8 +372,8 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $excel = $manager->getSpreadsheet($file);
+        $worksheet = $excel->getSheet(0);
 
         $manager->clear($worksheet, [
             'startColumn' => 'B',
@@ -401,8 +402,8 @@ class ManagerTest extends TestCase
     public function testWrite()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -444,8 +445,8 @@ class ManagerTest extends TestCase
     public function testWriteArray()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -491,8 +492,8 @@ class ManagerTest extends TestCase
     public function testWritePropertyMap()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $data = [
@@ -545,8 +546,8 @@ class ManagerTest extends TestCase
     public function testWritePropertyMapWildcard()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $data = [
@@ -595,8 +596,8 @@ class ManagerTest extends TestCase
     public function testWriteCallbacks()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $data = [
@@ -662,8 +663,8 @@ class ManagerTest extends TestCase
     public function testWriteKeepOriginalRows()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -722,8 +723,8 @@ class ManagerTest extends TestCase
     public function testWriteWithFinderAndInvalidRecord()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -758,8 +759,8 @@ class ManagerTest extends TestCase
 
     public function testSaveAndCallbackWriter()
     {
-        $writer = $this->createMock(PHPExcel_Writer_IWriter::class);
-        $excel = $this->createMock(PHPExcel::class);
+        $writer = $this->createMock(IWriter::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $file = $this->getFile('test.xlsx');
 
         $writer->expects($this->once())
@@ -778,8 +779,8 @@ class ManagerTest extends TestCase
     public function testWriteAndAttachHeader()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $manager->write($table, $worksheet, [
@@ -806,8 +807,8 @@ class ManagerTest extends TestCase
     public function testWriteAndAttachHeaderInvalidStartRow()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $manager->write($table, $worksheet, [
@@ -821,8 +822,8 @@ class ManagerTest extends TestCase
     public function testAttachHeader()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
 
         $header = [
             'a' => 'Foo',
@@ -844,8 +845,8 @@ class ManagerTest extends TestCase
     public function testAttachHeaderCustomOptions()
     {
         $manager = new Manager();
-        $excel = new PHPExcel();
-        $worksheet = $excel->getSheet();
+        $excel = new Spreadsheet();
+        $worksheet = $excel->getSheet(0);
 
         $header = [
             'a' => 'Foo',
