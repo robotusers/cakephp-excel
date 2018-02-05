@@ -187,7 +187,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $results = $manager->read($worksheet, $table);
@@ -211,7 +211,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -240,7 +240,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $manager->read($worksheet, $table, [
@@ -259,7 +259,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -292,7 +292,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -325,7 +325,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $results = $manager->read($worksheet, $table, [
@@ -356,7 +356,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
 
         $manager->clear($worksheet);
 
@@ -373,7 +373,7 @@ class ManagerTest extends TestCase
         $file = $this->getFile('test.xlsx');
 
         $excel = $manager->getExcel($file);
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
 
         $manager->clear($worksheet, [
             'startColumn' => 'B',
@@ -403,7 +403,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -446,7 +446,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -493,7 +493,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $data = [
@@ -547,7 +547,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $data = [
@@ -597,7 +597,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
         $data = [
@@ -664,7 +664,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -724,7 +724,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $data = [
@@ -780,7 +780,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $manager->write($table, $worksheet, [
@@ -808,7 +808,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
         $manager->write($table, $worksheet, [
@@ -823,7 +823,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
 
         $header = [
             'a' => 'Foo',
@@ -846,7 +846,7 @@ class ManagerTest extends TestCase
     {
         $manager = new Manager();
         $excel = new Spreadsheet();
-        $worksheet = $excel->getSheet();
+        $worksheet = $excel->getSheet(0);
 
         $header = [
             'a' => 'Foo',
