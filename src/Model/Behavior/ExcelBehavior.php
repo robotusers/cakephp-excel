@@ -196,7 +196,7 @@ class ExcelBehavior extends Behavior
     {
         if (!$worksheet instanceof Worksheet) {
             $file = $this->getFile();
-            $excel = $this->getManager()->getExcel($file, $options);
+            $excel = $this->getManager()->getSpreadsheet($file, $options);
             $worksheet = $this->discoverWorksheet($excel, $worksheet);
         }
         $this->worksheet = $worksheet;
@@ -207,8 +207,18 @@ class ExcelBehavior extends Behavior
     /**
      *
      * @return Spreadsheet
+     * @deprecated 0.5.0 Use `getSpreadsheet()` instead.
      */
     public function getExcel()
+    {
+        return $this->getSpreadsheet();
+    }
+
+    /**
+     *
+     * @return Spreadsheet
+     */
+    public function getSpreadsheet()
     {
         return $this->getWorksheet()->getParent();
     }

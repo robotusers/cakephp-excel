@@ -158,7 +158,7 @@ class ExcelBehaviorTest extends TestCase
         ]);
         $table->setFile($file);
 
-        $manager->method('getExcel')
+        $manager->method('getSpreadsheet')
             ->willReturn($excel);
 
         $excel->expects($this->once())
@@ -189,7 +189,7 @@ class ExcelBehaviorTest extends TestCase
         ]);
         $table->setFile($file);
 
-        $manager->method('getExcel')
+        $manager->method('getSpreadsheet')
             ->willReturn($excel);
 
         $excel->expects($this->once())
@@ -225,7 +225,7 @@ class ExcelBehaviorTest extends TestCase
         ]);
         $table->setFile($file);
 
-        $manager->method('getExcel')
+        $manager->method('getSpreadsheet')
             ->willReturn($excel);
 
         $excel->expects($this->once())
@@ -261,7 +261,7 @@ class ExcelBehaviorTest extends TestCase
         ]);
         $table->setFile($file);
 
-        $manager->method('getExcel')
+        $manager->method('getSpreadsheet')
             ->willReturn($excel);
 
         $excel->expects($this->never())
@@ -291,7 +291,7 @@ class ExcelBehaviorTest extends TestCase
     }
 
     /**
-     * @covers \Robotusers\Excel\Model\Behavior\ExcelBehavior::getExcel
+     * @covers \Robotusers\Excel\Model\Behavior\ExcelBehavior::getSpreadsheet
      */
     public function testGetExcel()
     {
@@ -301,7 +301,7 @@ class ExcelBehaviorTest extends TestCase
         $worksheet->method('getParent')->willReturn($excel);
 
         $table->setWorksheet($worksheet);
-        $tableExcel = $table->getExcel();
+        $tableExcel = $table->getSpreadsheet();
 
         $this->assertSame($excel, $tableExcel);
     }
@@ -367,7 +367,7 @@ class ExcelBehaviorTest extends TestCase
         $table = $this->createTable();
         $table->setFile($file);
 
-        $excel = $table->getManager()->getExcel($file, [
+        $excel = $table->getManager()->getSpreadsheet($file, [
             'delimiter' => ','
         ]);
         $table->setWorksheet($excel->getActiveSheet());
@@ -407,7 +407,7 @@ class ExcelBehaviorTest extends TestCase
             ]
         ]);
 
-        $writtenExcel = $table->getManager()->getExcel($file);
+        $writtenExcel = $table->getManager()->getSpreadsheet($file);
         $map = $table->behaviors()->get('Excel')->getConfig('columnMap');
 
         $worksheet = $writtenExcel->getActiveSheet();

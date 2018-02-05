@@ -177,7 +177,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.csv');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $this->assertInstanceOf(Spreadsheet::class, $excel);
     }
 
@@ -186,7 +186,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
@@ -210,7 +210,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
@@ -239,7 +239,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('RegularColumns');
 
@@ -258,7 +258,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
@@ -291,7 +291,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
@@ -324,7 +324,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
         $table = TableRegistry::get('MappedColumns');
 
@@ -355,7 +355,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
 
         $manager->clear($worksheet);
@@ -372,7 +372,7 @@ class ManagerTest extends TestCase
         $manager = new Manager();
         $file = $this->getFile('test.xlsx');
 
-        $excel = $manager->getExcel($file);
+        $excel = $manager->getSpreadsheet($file);
         $worksheet = $excel->getSheet(0);
 
         $manager->clear($worksheet, [

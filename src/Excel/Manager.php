@@ -290,8 +290,19 @@ class Manager
      * @param File $file
      * @param array $options
      * @return Spreadsheet
+     * @deprecated 0.5.0 Use `getSpreadsheet()` instead.
      */
     public function getExcel(File $file, array $options = [])
+    {
+        return $this->getSpreadsheet($file, $options);
+    }
+
+    /**
+     * @param File $file
+     * @param array $options
+     * @return Spreadsheet
+     */
+    public function getSpreadsheet(File $file, array $options = [])
     {
         $reader = $this->getReader($file, $options);
 
