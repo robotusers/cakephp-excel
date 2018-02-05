@@ -60,13 +60,13 @@ class TestCase extends CakeTestCase
      *
      * @param string $filename
      * @param int $sheetIndex
-     * @return \PHPExcel_Worksheet
+     * @return \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet
      */
     protected function loadWorksheet($filename, $sheetIndex = 0)
     {
         $file = $this->getFile($filename);
 
-        $reader = \PHPExcel_IOFactory::createReaderForFile($file->pwd());
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file->pwd());
         $excel = $reader->load($file->pwd());
 
         return $excel->getSheet($sheetIndex);

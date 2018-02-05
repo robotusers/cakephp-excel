@@ -29,10 +29,10 @@ use Cake\Database\Connection;
 use Cake\Database\Schema\TableSchema;
 use Cake\Utility\Inflector;
 use Cake\Utility\Text;
-use PHPExcel_Cell;
-use PHPExcel_Cell_DataType;
-use PHPExcel_Worksheet;
-use PHPExcel_Worksheet_Row;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Worksheet\Row;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * Description of Factory
@@ -47,7 +47,7 @@ class Factory
      * @var array
      */
     protected $dataTypeMap = [
-        PHPExcel_Cell_DataType::TYPE_NULL => false
+        DataType::TYPE_NULL => false
     ];
 
     /**
@@ -64,11 +64,11 @@ class Factory
 
     /**
      *
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @param array $options
      * @return TableSchema
      */
-    public function createSchema(PHPExcel_Worksheet $worksheet, array $options = [])
+    public function createSchema(Worksheet $worksheet, array $options = [])
     {
         $options += [
             'tableName' => $this->getTableName($worksheet),
@@ -96,10 +96,10 @@ class Factory
                 'columns' => [$primaryKey]
             ]);
 
-        $row = new PHPExcel_Worksheet_Row($worksheet, $options['startRow']);
+        $row = new Row($worksheet, $options['startRow']);
         $cells = $row->getCellIterator($options['startColumn'], $options['endColumn']);
         foreach ($cells as $cell) {
-            /* @var $cell PHPExcel_Cell */
+            /* @var $cell Cell */
 
             $type = $this->discoverType($cell, $options);
 
@@ -117,11 +117,11 @@ class Factory
 
     /**
      *
-     * @param PHPExcel_Cell $cell
+     * @param Cell $cell
      * @param array $options
-     * @return array|string|false
+     * @return array|string|bool
      */
-    protected function discoverType(PHPExcel_Cell $cell, array $options)
+    protected function discoverType(Cell $cell, array $options)
     {
         $format = $cell->getStyle()->getNumberFormat()->getFormatCode();
         $dataType = $cell->getDataType();
@@ -159,10 +159,10 @@ class Factory
 
     /**
      *
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @return string
      */
-    public function getTableName(PHPExcel_Worksheet $worksheet)
+    public function getTableName(Worksheet $worksheet)
     {
         $excel = $worksheet->getParent();
         $title = $excel->getID() . ' ' . $worksheet->getTitle();
@@ -197,7 +197,7 @@ class Factory
     /**
      *
      * @param string $type
-     * @param string|array|false $column
+     * @param string|array|bool $column
      * @return $this
      */
     public function setDataType($type, $column)
@@ -210,7 +210,7 @@ class Factory
     /**
      *
      * @param string $format
-     * @param string|array|false $column
+     * @param string|array|bool $column
      * @return $this
      */
     public function setNumberFormat($format, $column)

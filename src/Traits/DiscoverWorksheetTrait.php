@@ -26,8 +26,8 @@
 namespace Robotusers\Excel\Traits;
 
 use InvalidArgumentException;
-use PHPExcel;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  *
@@ -38,12 +38,12 @@ trait DiscoverWorksheetTrait
 
     /**
      *
-     * @param PHPExcel $excel
+     * @param Spreadsheet $excel
      * @param string $name
-     * @return PHPExcel_Worksheet
+     * @return Worksheet
      * @throws InvalidArgumentException
      */
-    protected function discoverWorksheet(PHPExcel $excel, $name = null)
+    protected function discoverWorksheet(Spreadsheet $excel, $name = null)
     {
         if ($name !== null) {
             if ($excel->sheetNameExists($name)) {

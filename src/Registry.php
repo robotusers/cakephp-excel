@@ -31,7 +31,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Inflector;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Database\Factory;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Model\Sheet;
@@ -130,11 +130,11 @@ class Registry
     /**
      *
      * @param File $file
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @param array $options
      * @return Sheet
      */
-    protected function loadSheet(File $file, PHPExcel_Worksheet $worksheet, array $options)
+    protected function loadSheet(File $file, Worksheet $worksheet, array $options)
     {
         $schema = $this->factory->createSchema($worksheet, $options['excel']);
         $connection = $this->getConnection();

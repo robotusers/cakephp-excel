@@ -30,8 +30,8 @@ use Cake\Filesystem\File;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use InvalidArgumentException;
-use PHPExcel;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Traits\DiscoverWorksheetTrait;
 use RuntimeException;
@@ -54,7 +54,7 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @var PHPExcel_Worksheet
+     * @var Worksheet
      */
     protected $worksheet;
 
@@ -174,7 +174,7 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @return PHPExcel_Worksheet
+     * @return Worksheet
      * @throws RuntimeException
      */
     public function getWorksheet()
@@ -188,13 +188,13 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @param string|int|PHPExcel_Worksheet $worksheet
+     * @param string|int|Worksheet $worksheet
      * @param array $options
      * @return Table
      */
     public function setWorksheet($worksheet = null, array $options = [])
     {
-        if (!$worksheet instanceof PHPExcel_Worksheet) {
+        if (!$worksheet instanceof Worksheet) {
             $file = $this->getFile();
             $excel = $this->getManager()->getExcel($file, $options);
             $worksheet = $this->discoverWorksheet($excel, $worksheet);
@@ -206,7 +206,7 @@ class ExcelBehavior extends Behavior
 
     /**
      *
-     * @return PHPExcel
+     * @return Spreadsheet
      */
     public function getExcel()
     {

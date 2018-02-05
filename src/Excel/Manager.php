@@ -31,17 +31,17 @@ use Cake\ORM\Table;
 use DateTimeInterface;
 use InvalidArgumentException;
 use LogicException;
-use PHPExcel;
-use PHPExcel_Cell;
-use PHPExcel_Cell_DataType;
-use PHPExcel_IOFactory;
-use PHPExcel_Reader_CSV;
-use PHPExcel_Reader_IReader;
-use PHPExcel_Shared_Date;
-use PHPExcel_Worksheet;
-use PHPExcel_Worksheet_Row;
-use PHPExcel_Writer_CSV;
-use PHPExcel_Writer_IWriter;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Csv as Csv2;
+use PhpOffice\PhpSpreadsheet\Reader\IReader;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Row;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use UnexpectedValueException;
 
 /**
@@ -54,12 +54,12 @@ class Manager
 
     /**
      *
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @param Table $table
      * @param array $options
      * @return EntityInterface[]
      */
-    public function read(PHPExcel_Worksheet $worksheet, Table $table, array $options = [])
+    public function read(Worksheet $worksheet, Table $table, array $options = [])
     {
         $options += [
             'startRow' => 1,
@@ -78,7 +78,7 @@ class Manager
         $rows = $worksheet->getRowIterator($options['startRow'], $options['endRow']);
         $entities = [];
         foreach ($rows as $rowIndex => $row) {
-            /* @var $row PHPExcel_Worksheet_Row */
+            /* @var $row Row */
 
             $data = [];
             if ($options['keepOriginalRows']) {
@@ -88,7 +88,7 @@ class Manager
 
             $hasData = false;
             foreach ($cells as $cell) {
-                /* @var $cell PHPExcel_Cell */
+                /* @var $cell Cell */
 
                 $column = $cell->getColumn();
                 $property = $this->resolveKey($options['columnMap'], $column);
@@ -115,11 +115,11 @@ class Manager
 
     /**
      *
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @param array $options
-     * @return PHPExcel_Worksheet
+     * @return Worksheet
      */
-    public function clear(PHPExcel_Worksheet $worksheet, array $options = [])
+    public function clear(Worksheet $worksheet, array $options = [])
     {
         $options += [
             'startRow' => 1,
@@ -146,12 +146,12 @@ class Manager
     /**
      *
      * @param Table $table
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @param array $options
-     * @return PHPExcel_Worksheet
+     * @return Worksheet
      * @throws UnexpectedValueException
      */
-    public function write(Table $table, PHPExcel_Worksheet $worksheet, array $options = [])
+    public function write(Table $table, Worksheet $worksheet, array $options = [])
     {
         $options += [
             'finder' => 'all',
@@ -237,12 +237,12 @@ class Manager
 
     /**
      *
-     * @param PHPExcel_Worksheet $worksheet
+     * @param Worksheet $worksheet
      * @param array $header
      * @param array $options
-     * @return PHPExcel_Worksheet
+     * @return Worksheet
      */
-    public function attachHeader(PHPExcel_Worksheet $worksheet, array $header, array $options = [])
+    public function attachHeader(Worksheet $worksheet, array $header, array $options = [])
     {
         $options += [
             'row' => 1,
@@ -266,22 +266,22 @@ class Manager
 
     /**
      *
-     * @param PHPExcel_Cell $cell
+     * @param Cell $cell
      * @param mixed $value
      * @return void
      */
-    protected function setCellValue(PHPExcel_Cell $cell, $value)
+    protected function setCellValue(Cell $cell, $value)
     {
         if ($value instanceof DateTimeInterface) {
-            $value = PHPExcel_Shared_Date::PHPToExcel($value->format('U'));
+            $value = Date::PHPToExcel($value->format('U'));
             $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD HH:MM:SS');
         }
         $cell->setValue($value);
         if (is_numeric($value)) {
-            $cell->setDataType(PHPExcel_Cell_DataType::TYPE_NUMERIC);
+            $cell->setDataType(DataType::TYPE_NUMERIC);
         }
         if (is_bool($value)) {
-            $cell->setDataType(PHPExcel_Cell_DataType::TYPE_BOOL);
+            $cell->setDataType(DataType::TYPE_BOOL);
         }
     }
 
@@ -289,7 +289,7 @@ class Manager
      *
      * @param File $file
      * @param array $options
-     * @return PHPExcel
+     * @return Spreadsheet
      */
     public function getExcel(File $file, array $options = [])
     {
@@ -302,7 +302,7 @@ class Manager
      *
      * @param File $file
      * @param array $options
-     * @return PHPExcel_Reader_IReader
+     * @return IReader
      * @throws InvalidArgumentException
      */
     public function getReader(File $file, array $options = [])
@@ -312,9 +312,9 @@ class Manager
             throw new InvalidArgumentException($message);
         }
 
-        $reader = PHPExcel_IOFactory::createReaderForFile($file->pwd());
+        $reader = IOFactory::createReaderForFile($file->pwd());
 
-        if ($reader instanceof PHPExcel_Reader_CSV) {
+        if ($reader instanceof Csv2) {
             if (isset($options['delimiter'])) {
                 $reader->setDelimiter($options['delimiter']);
             }
@@ -324,7 +324,7 @@ class Manager
         }
         if (isset($options['readerCallback'])) {
             $result = $options['readerCallback']($reader, $file);
-            if ($result instanceof PHPExcel_Reader_IReader) {
+            if ($result instanceof IReader) {
                 $reader = $result;
             }
         }
@@ -334,13 +334,13 @@ class Manager
 
     /**
      *
-     * @param PHPExcel $excel
+     * @param Spreadsheet $excel
      * @param File $file
      * @param array $options
-     * @return PHPExcel_Writer_IWriter
+     * @return IWriter
      * @throws InvalidArgumentException
      */
-    public function getWriter(PHPExcel $excel, File $file, array $options = [])
+    public function getWriter(Spreadsheet $excel, File $file, array $options = [])
     {
         if (!$file->exists()) {
             $message = sprintf('File %s does not exist.', $file->name());
@@ -350,11 +350,11 @@ class Manager
         if (isset($options['writerType'])) {
             $type = $options['writerType'];
         } else {
-            $type = PHPExcel_IOFactory::identify($file->pwd());
+            $type = IOFactory::identify($file->pwd());
         }
-        $writer = PHPExcel_IOFactory::createWriter($excel, $type);
+        $writer = IOFactory::createWriter($excel, $type);
 
-        if ($writer instanceof PHPExcel_Writer_CSV) {
+        if ($writer instanceof Csv) {
             if (isset($options['delimiter'])) {
                 $writer->setDelimiter($options['delimiter']);
             }
@@ -364,7 +364,7 @@ class Manager
         }
         if (isset($options['writerCallback'])) {
             $result = $options['writerCallback']($writer, $file);
-            if ($result instanceof PHPExcel_Writer_IWriter) {
+            if ($result instanceof IWriter) {
                 $writer = $result;
             }
         }
@@ -374,12 +374,12 @@ class Manager
 
     /**
      *
-     * @param PHPExcel $excel
+     * @param Spreadsheet $excel
      * @param File $file
      * @param array $options
      * @return File
      */
-    public function save(PHPExcel $excel, File $file, array $options = [])
+    public function save(Spreadsheet $excel, File $file, array $options = [])
     {
         $writer = $this->getWriter($excel, $file, $options);
         $writer->save($file->pwd());

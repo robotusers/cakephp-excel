@@ -31,8 +31,8 @@ use Cake\Filesystem\File;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
-use PHPExcel;
-use PHPExcel_Worksheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Test\TestCase;
 use RuntimeException;
@@ -138,7 +138,7 @@ class ExcelBehaviorTest extends TestCase
     public function testWorksheet()
     {
         $table = $this->createTable();
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
 
         $table->setWorksheet($worksheet);
         $tableWorksheet = $table->getWorksheet();
@@ -148,9 +148,9 @@ class ExcelBehaviorTest extends TestCase
 
     public function testWorksheetName()
     {
-        $excel = $this->createMock(\PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $file = $this->createMock(File::class);
 
         $table = $this->createTable([
@@ -179,9 +179,9 @@ class ExcelBehaviorTest extends TestCase
 
     public function testWorksheetCodeName()
     {
-        $excel = $this->createMock(\PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $file = $this->createMock(File::class);
 
         $table = $this->createTable([
@@ -215,9 +215,9 @@ class ExcelBehaviorTest extends TestCase
 
     public function testWorksheetIndex()
     {
-        $excel = $this->createMock(\PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $file = $this->createMock(File::class);
 
         $table = $this->createTable([
@@ -251,9 +251,9 @@ class ExcelBehaviorTest extends TestCase
 
     public function testWorksheetActive()
     {
-        $excel = $this->createMock(\PHPExcel::class);
+        $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $file = $this->createMock(File::class);
 
         $table = $this->createTable([
@@ -296,8 +296,8 @@ class ExcelBehaviorTest extends TestCase
     public function testGetExcel()
     {
         $table = $this->createTable();
-        $excel = $this->createMock(PHPExcel::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $excel = $this->createMock(Spreadsheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $worksheet->method('getParent')->willReturn($excel);
 
         $table->setWorksheet($worksheet);
@@ -338,7 +338,7 @@ class ExcelBehaviorTest extends TestCase
     public function testReadExcel()
     {
         $manager = $this->createMock(Manager::class);
-        $worksheet = $this->createMock(PHPExcel_Worksheet::class);
+        $worksheet = $this->createMock(Worksheet::class);
         $table = $this->createTable([
             'manager' => $manager
         ]);
