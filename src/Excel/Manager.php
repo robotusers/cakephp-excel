@@ -34,13 +34,13 @@ use LogicException;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Reader\Csv as Csv2;
+use PhpOffice\PhpSpreadsheet\Reader\Csv as CsvReader;
 use PhpOffice\PhpSpreadsheet\Reader\IReader;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Row;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use UnexpectedValueException;
 
@@ -314,7 +314,7 @@ class Manager
 
         $reader = IOFactory::createReaderForFile($file->pwd());
 
-        if ($reader instanceof Csv2) {
+        if ($reader instanceof CsvReader) {
             if (isset($options['delimiter'])) {
                 $reader->setDelimiter($options['delimiter']);
             }
@@ -354,7 +354,7 @@ class Manager
         }
         $writer = IOFactory::createWriter($excel, $type);
 
-        if ($writer instanceof Csv) {
+        if ($writer instanceof CsvWriter) {
             if (isset($options['delimiter'])) {
                 $writer->setDelimiter($options['delimiter']);
             }
