@@ -168,7 +168,8 @@ class Factory
         $title = $excel->getID() . ' ' . $worksheet->getTitle();
 
         $slug = Text::slug($title, [
-            'replacement' => '_'
+            'replacement' => '_',
+            'preserve' => '.',
         ]);
         $camelized = Inflector::camelize($slug);
         $name = Inflector::tableize($camelized);
