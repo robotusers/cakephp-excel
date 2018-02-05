@@ -152,7 +152,7 @@ class Registry
         $table->setSchema($schema)
             ->setFile($file)
             ->setWorksheet($worksheet)
-            ->readExcel();
+            ->readSpreadsheet();
 
         return $table;
     }

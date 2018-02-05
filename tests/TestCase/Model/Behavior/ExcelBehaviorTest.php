@@ -355,7 +355,7 @@ class ExcelBehaviorTest extends TestCase
             ->willReturn($results);
 
         $table->setWorksheet($worksheet);
-        $read = $table->readExcel($options);
+        $read = $table->readSpreadsheet($options);
         $this->assertEquals($results, $read);
 
         $this->assertEventFired('Model.beforeReadWorksheet');
@@ -393,7 +393,7 @@ class ExcelBehaviorTest extends TestCase
         $entities = $table->newEntities($data);
         $table->saveMany($entities);
 
-        $table->writeExcel([
+        $table->writeSpreadsheet([
             'columnCallbacks' => [
                 'D' => function ($cell) {
                     $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD');

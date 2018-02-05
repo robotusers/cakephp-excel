@@ -115,7 +115,7 @@ class ExcelBehavior extends Behavior
      * @param array $options
      * @return EntityInterface[]
      */
-    public function readExcel(array $options = [])
+    public function readSpreadsheet(array $options = [])
     {
         $options += $this->getConfig();
         $worksheet = $this->getWorksheet();
@@ -129,11 +129,21 @@ class ExcelBehavior extends Behavior
     }
 
     /**
+     * @param array $options
+     * @return EntityInterface[]
+     * @deprecated 0.5.0 Use `readSpreadsheet()` instead.
+     */
+    public function readExcel(array $options = [])
+    {
+        return $this->readSpreadsheet($options);
+    }
+
+    /**
      *
      * @param array $options
      * @return File
      */
-    public function writeExcel(array $options = [])
+    public function writeSpreadsheet(array $options = [])
     {
         $options += $this->getConfig();
 
@@ -157,6 +167,17 @@ class ExcelBehavior extends Behavior
         $writer->save($file->pwd());
 
         return $file;
+    }
+
+    /**
+     *
+     * @param array $options
+     * @return File
+     * @deprecated 0.5.0 Use `writeSpreadsheet()` instead.
+     */
+    public function writeExcel(array $options = [])
+    {
+        return $this->writeSpreadsheet($options);
     }
 
     /**

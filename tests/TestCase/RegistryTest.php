@@ -87,7 +87,7 @@ class RegistryTest extends TestCase
                 'setSchema',
                 'setFile',
                 'setWorksheet',
-                'readExcel'
+                'readSpreadsheet'
             ])
             ->getMock();
 
@@ -147,7 +147,7 @@ class RegistryTest extends TestCase
             ->with($worksheet)
             ->willReturn($table);
         $table->expects($this->any())
-            ->method('readExcel');
+            ->method('readSpreadsheet');
 
         $sheet = $registry->get($file, 'foo', $options, $locatorOptions);
 
@@ -173,7 +173,7 @@ class RegistryTest extends TestCase
                 'setSchema',
                 'setFile',
                 'setWorksheet',
-                'readExcel'
+                'readSpreadsheet'
             ])
             ->getMock();
 
@@ -210,7 +210,7 @@ class RegistryTest extends TestCase
         $table->method('setWorksheet')
             ->willReturn($table);
         $table->expects($this->any())
-            ->method('readExcel');
+            ->method('readSpreadsheet');
 
         $sheet = $registry->get('test.xlsx', $options);
 
