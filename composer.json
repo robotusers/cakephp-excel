@@ -1,29 +1,29 @@
 {
-	"name": "robotusers/cakephp-excel",
-	"description": "Robotusers CakePHP Excel plugin",
-	"homepage": "https://github.com/robotusers/cakephp-excel",
-	"type": "cakephp-plugin",
-	"license": "MIT",
-	"require": {
-		"php": ">=5.5",
-		"cakephp/filesystem": "^3.4",
-		"cakephp/orm": "^3.4",
-		"phpoffice/phpexcel": "^1.8"
-	},
-	"require-dev": {
-		"cakephp/cakephp": "~3.4.0",
-		"cakephp/cakephp-codesniffer": "*",
-		"phpunit/phpunit": "^5.6|^6"
-	},
-	"autoload": {
-		"psr-4": {
-			"Robotusers\\Excel\\": "src"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Cake\\Test\\": "vendor/cakephp/cakephp/tests",
-			"Robotusers\\Excel\\Test\\": "tests"
-		}
-	}
+    "name": "robotusers/cakephp-excel",
+    "description": "Robotusers CakePHP Excel plugin",
+    "homepage": "https://github.com/robotusers/cakephp-excel",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5",
+        "cakephp/filesystem": "^3.4",
+        "cakephp/orm": "^3.4",
+        "phpoffice/phpspreadsheet": "^1.1"
+    },
+    "require-dev": {
+        "cakephp/cakephp": "~3.4.0",
+        "cakephp/cakephp-codesniffer": "*",
+        "phpunit/phpunit": "^5.6|^6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Robotusers\\Excel\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests",
+            "Robotusers\\Excel\\Test\\": "tests"
+        }
+    }
 }
