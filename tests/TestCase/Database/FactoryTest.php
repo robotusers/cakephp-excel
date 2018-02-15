@@ -184,7 +184,7 @@ class FactoryTest extends TestCase
         $worksheet = $this->loadWorksheet('test.xlsx');
         $factory = new Factory();
 
-        $name = $worksheet->getParent()->getID() . '_sheets';
+        $name = str_replace('.', '', $worksheet->getParent()->getID()) . '_sheets';
 
         $schema = $factory->createSchema($worksheet);
         $this->assertEquals($name, $schema->name());

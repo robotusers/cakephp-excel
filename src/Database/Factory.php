@@ -169,7 +169,6 @@ class Factory
 
         $slug = Text::slug($title, [
             'replacement' => '_',
-            'preserve' => '.',
         ]);
         $camelized = Inflector::camelize($slug);
         $name = Inflector::tableize($camelized);
