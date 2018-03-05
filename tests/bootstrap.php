@@ -6,6 +6,8 @@
  * has been installed as a dependency of the plugin, or the plugin is itself
  * installed as a dependency of an application.
  */
+error_reporting(E_ALL ^ E_USER_DEPRECATED);
+
 use Cake\Core\Plugin;
 
 $findRoot = function ($root) {
