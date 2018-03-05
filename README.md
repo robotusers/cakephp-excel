@@ -16,6 +16,23 @@ CakePHP Excel plugin versions 0.4.0 and lower used now abandoned [PHPExcel](http
 
 ```
 composer require robotusers/cakephp-excel
+```
+
+CakePHP 3.6+
+
+```php
+//Application.php
+
+public function bootstrap()
+{
+    ...
+    $this->addPlugin('Robotusers/Excel');
+}
+```
+
+CakePHP 3.5 and lower:
+
+```
 bin/cake plugin load Robotusers/Excel -b
 ```
 
