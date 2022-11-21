@@ -35,7 +35,7 @@ use Robotusers\Excel\Model\Behavior\ExcelBehavior;
  */
 class Sheet extends Table
 {
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $excelConfig = [];
         if (isset($config['excel'])) {

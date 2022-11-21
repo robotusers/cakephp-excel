@@ -86,7 +86,7 @@ class ExcelBehavior extends Behavior
      * @param array $config
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (isset($config['manager'])) {
             if (!$config['manager'] instanceof Manager) {

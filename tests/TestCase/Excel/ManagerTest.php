@@ -48,8 +48,8 @@ use UnexpectedValueException;
 class ManagerTest extends TestCase
 {
     public $fixtures = [
-        'plugin.Robotusers/Excel.regular_columns',
-        'plugin.Robotusers/Excel.mapped_columns'
+        'plugin.Robotusers/Excel.RegularColumns',
+        'plugin.Robotusers/Excel.MappedColumns'
     ];
 
     public function testGetReaderXlsx()

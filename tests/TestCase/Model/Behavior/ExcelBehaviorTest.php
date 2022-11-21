@@ -46,10 +46,10 @@ use stdClass;
 class ExcelBehaviorTest extends TestCase
 {
     public $fixtures = [
-        'plugin.Robotusers/Excel.mapped_columns'
+        'plugin.Robotusers/Excel.MappedColumns'
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         EventManager::instance()->setEventList(new EventList);

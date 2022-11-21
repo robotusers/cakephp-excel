@@ -59,7 +59,7 @@ class RegistryTest extends TestCase
 
         $registry = new Registry($manager, $factory);
         $registry->setConnection($connection);
-        $registry->tableLocator($locator);
+        $registry->setTableLocator($locator);
 
         return $registry;
     }
@@ -124,7 +124,7 @@ class RegistryTest extends TestCase
             ->method('createTable')
             ->with($registry->getConnection(), $schema);
 
-        $registry->tableLocator()
+        $registry->getTableLocator()
             ->method('get')
             ->with($name, [
                 'className' => Sheet::class,
@@ -194,7 +194,7 @@ class RegistryTest extends TestCase
         $schema->method('name')
             ->willReturn($name);
 
-        $registry->tableLocator()
+        $registry->getTableLocator()
             ->method('get')
             ->with($name, [
                 'className' => Sheet::class,
