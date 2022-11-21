@@ -121,12 +121,11 @@ class ExcelBehaviorTest extends TestCase
         $this->assertSame($file, $tableFile);
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage File has not been set.
-     */
     public function testFileMissing()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('File has not been set.');
+
         $table = $this->createTable();
         $table->getFile();
     }
@@ -280,12 +279,11 @@ class ExcelBehaviorTest extends TestCase
         $this->assertSame($worksheet, $tableWorksheet);
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Worksheet has not been set.
-     */
     public function testWorksheetMissing()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Worksheet has not been set.');
+
         $table = $this->createTable();
         $table->getWorksheet();
     }
@@ -321,12 +319,11 @@ class ExcelBehaviorTest extends TestCase
         $this->assertSame($manager, $tableManager);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid manager.
-     */
     public function testInvalidManager()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid manager.');
+
         $manager = new stdClass();
         $table = $this->createTable([
             'manager' => $manager
@@ -363,7 +360,7 @@ class ExcelBehaviorTest extends TestCase
 
     public function testWriteExcel()
     {
-        $file = $this->getFile('test_empty.xlsx', true);
+        $file = $this->getFile('test_empty.xlsx');
         $table = $this->createTable();
         $table->setFile($file);
 
@@ -418,8 +415,6 @@ class ExcelBehaviorTest extends TestCase
                 $this->assertEquals($data[$i][$property], $cell->getFormattedValue());
             }
         }
-
-        $file->delete();
 
         $this->assertEventFired('Model.beforeWriteWorksheet');
         $this->assertEventFired('Model.beforeWriteExcel');
