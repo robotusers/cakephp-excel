@@ -92,12 +92,11 @@ class RegistryTest extends TestCase
             ->getMock();
 
         $registry->getManager()
-            ->expects($this->once())
             ->method('getReader')
             ->with($file)
             ->willReturn($reader);
 
-        $reader->expects($this->once())
+        $reader
             ->method('load')
             ->with($file->pwd())
             ->willReturn($excel);
@@ -111,7 +110,6 @@ class RegistryTest extends TestCase
             ->willReturn($worksheet);
 
         $registry->getFactory()
-            ->expects($this->at(0))
             ->method('createSchema')
             ->with($worksheet)
             ->willReturn($schema);
@@ -120,7 +118,6 @@ class RegistryTest extends TestCase
             ->willReturn($name);
 
         $registry->getFactory()
-            ->expects($this->at(1))
             ->method('createTable')
             ->with($registry->getConnection(), $schema);
 
