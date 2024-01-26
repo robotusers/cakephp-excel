@@ -24,9 +24,9 @@
  */
 namespace Robotusers\Excel\Test;
 
-use Cake\Filesystem\File;
 use Cake\TestSuite\TestCase as CakeTestCase;
 use InvalidArgumentException;
+use SplFileInfo;
 
 /**
  * Description of TestCase
@@ -66,8 +66,8 @@ class TestCase extends CakeTestCase
     {
         $file = $this->getFile($filename);
 
-        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file->pwd());
-        $excel = $reader->load($file->pwd());
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file->getRealPath());
+        $excel = $reader->load($file->getRealPath());
 
         return $excel->getSheet($sheetIndex);
     }

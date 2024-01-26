@@ -18,7 +18,7 @@ CakePHP Excel plugin versions 0.4.0 and lower used now abandoned [PHPExcel](http
 composer require robotusers/cakephp-excel
 ```
 
-CakePHP 3.6+
+CakePHP 5.0+
 
 ```php
 //Application.php
@@ -193,9 +193,9 @@ public function initialize()
 If you want to load data into your table you have to set a worksheet instance.
 
 ```php
-use Cake\Filesystem\File;
+use SplFileInfo;
 
-$file = new File('path/to/file.xls');
+$file = new SplFileInfo('path/to/file.xls');
 $spreadsheet = $table->getManager()->getSpreadsheet($file); // \PhpOffice\PhpSpreadsheet\Spreadsheet instance
 $worksheet = $spreadsheet->getActiveSheet(); // \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet instance
 
@@ -220,7 +220,7 @@ use Robotusers\Excel\Excel\Manager;
 $table = TableRegistry::get('SomeTable');
 $manager = new Manager();
 
-$file = new File('file.xlsx');
+$file = new SplFileInfo('file.xlsx');
 $spreadsheet = $manager->getSpreadsheet($file);
 $worksheet = $spreadsheet->getActiveSheet();
 

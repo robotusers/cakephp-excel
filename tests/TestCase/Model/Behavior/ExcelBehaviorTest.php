@@ -27,7 +27,6 @@ namespace Robotusers\Excel\Test\TestCase\Model\Behavior;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
-use Cake\Filesystem\File;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
@@ -36,6 +35,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Test\TestCase;
 use RuntimeException;
+use SplFileInfo;
 use stdClass;
 
 /**
@@ -150,7 +150,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(Worksheet::class);
-        $file = $this->createMock(File::class);
+        $file = $this->createMock(SplFileInfo::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -181,7 +181,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(Worksheet::class);
-        $file = $this->createMock(File::class);
+        $file = $this->createMock(SplFileInfo::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -217,7 +217,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(Worksheet::class);
-        $file = $this->createMock(File::class);
+        $file = $this->createMock(SplFileInfo::class);
 
         $table = $this->createTable([
             'manager' => $manager
@@ -253,7 +253,7 @@ class ExcelBehaviorTest extends TestCase
         $excel = $this->createMock(Spreadsheet::class);
         $manager = $this->createMock(Manager::class);
         $worksheet = $this->createMock(Worksheet::class);
-        $file = $this->createMock(File::class);
+        $file = $this->createMock(SplFileInfo::class);
 
         $table = $this->createTable([
             'manager' => $manager

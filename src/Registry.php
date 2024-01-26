@@ -28,14 +28,15 @@ namespace Robotusers\Excel;
 use Cake\Database\Connection;
 use Cake\Datasource\ConnectionInterface;
 use Cake\Datasource\ConnectionManager;
-use Cake\Filesystem\File;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Inflector;
+use Cake\Utility\Security;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Database\Factory;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Model\Sheet;
 use Robotusers\Excel\Traits\DiscoverWorksheetTrait;
+use SplFileInfo;
 
 /**
  * Description of SheetLoader
@@ -92,7 +93,7 @@ class Registry
 
     /**
      *
-     * @param string|File $file
+     * @param string|SplFileInfo $file
      * @param string $sheet
      * @param array $options
      * @param array $locatorOptions
@@ -100,8 +101,8 @@ class Registry
      */
     public function get($file, $sheet = null, array $options = [], array $locatorOptions = [])
     {
-        if (!$file instanceof File) {
-            $file = new File($file);
+        if (!$file instanceof SplFileInfo) {
+            $file = new SplFileInfo($file);
         }
         if (is_array($sheet)) {
             $options = $sheet;
@@ -109,10 +110,11 @@ class Registry
         }
 
         $reader = $this->manager->getReader($file, $options);
-        $excel = $reader->load($file->pwd());
+        $excel = $reader->load($file->getRealPath());
         $worksheet = $this->discoverWorksheet($excel, $sheet);
 
-        $hash = $file->md5();
+        // $hash = $file->md5();
+        $hash = Security::hash($file->getRealPath(),'md5');
         $sheetId = $excel->getIndex($worksheet);
 
         if (!isset($this->sheets[$hash][$sheetId])) {
@@ -134,7 +136,7 @@ class Registry
      * @param array $options
      * @return Sheet
      */
-    protected function loadSheet(File $file, Worksheet $worksheet, array $options)
+    protected function loadSheet(SplFileInfo $file, Worksheet $worksheet, array $options)
     {
         $schema = $this->factory->createSchema($worksheet, $options['excel']);
         $connection = $this->getConnection();
