@@ -9,16 +9,11 @@
 CakePHP Excel plugin allows for spreadsheet files manipulation with the power of CakePHP ORM.
 This plugin is build using [PHPSpreadsheet](https://github.com/PHPOffice/PHPSpreadsheet) library and can work with multiple types of spreadsheet files (excel, csv etc).
 
-**NOTE:**
-CakePHP Excel plugin versions 0.4.0 and lower used now abandoned [PHPExcel](https://github.com/PHPOffice/PHPExcel) library.
-
 ## Installation
 
 ```
 composer require robotusers/cakephp-excel
 ```
-
-CakePHP 3.6+
 
 ```php
 //Application.php
@@ -28,12 +23,6 @@ public function bootstrap()
     ...
     $this->addPlugin('Robotusers/Excel');
 }
-```
-
-CakePHP 3.5 and lower:
-
-```
-bin/cake plugin load Robotusers/Excel -b
 ```
 
 ## Using the plugin
