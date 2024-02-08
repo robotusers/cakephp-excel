@@ -296,7 +296,7 @@ class FactoryTest extends TestCase
         $this->assertEquals(array_keys($columns), $schema->columns());
         foreach ($columns as $column => $type) {
             $message = sprintf('Failed asserting that column %s is type of %s', $column, $type);
-            $this->assertEquals($type, $schema->columnType($column), $message);
+            $this->assertEquals($type, $schema->getColumnType($column), $message);
         }
     }
 }

@@ -148,7 +148,7 @@ class Registry
             'connection' => $connection
         ];
 
-        $table = $this->tableLocator()->get($alias, $options);
+        $table = $this->getTableLocator()->get($alias, $options);
         $table->setSchema($schema)
             ->setFile($file)
             ->setWorksheet($worksheet)

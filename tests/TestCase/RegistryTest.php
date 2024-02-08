@@ -59,7 +59,7 @@ class RegistryTest extends TestCase
 
         $registry = new Registry($manager, $factory);
         $registry->setConnection($connection);
-        $registry->tableLocator($locator);
+        $registry->setTableLocator($locator);
 
         return $registry;
     }
@@ -92,12 +92,11 @@ class RegistryTest extends TestCase
             ->getMock();
 
         $registry->getManager()
-            ->expects($this->once())
             ->method('getReader')
             ->with($file)
             ->willReturn($reader);
 
-        $reader->expects($this->once())
+        $reader
             ->method('load')
             ->with($file->pwd())
             ->willReturn($excel);
@@ -111,7 +110,6 @@ class RegistryTest extends TestCase
             ->willReturn($worksheet);
 
         $registry->getFactory()
-            ->expects($this->at(0))
             ->method('createSchema')
             ->with($worksheet)
             ->willReturn($schema);
@@ -120,11 +118,10 @@ class RegistryTest extends TestCase
             ->willReturn($name);
 
         $registry->getFactory()
-            ->expects($this->at(1))
             ->method('createTable')
             ->with($registry->getConnection(), $schema);
 
-        $registry->tableLocator()
+        $registry->getTableLocator()
             ->method('get')
             ->with($name, [
                 'className' => Sheet::class,
@@ -194,7 +191,7 @@ class RegistryTest extends TestCase
         $schema->method('name')
             ->willReturn($name);
 
-        $registry->tableLocator()
+        $registry->getTableLocator()
             ->method('get')
             ->with($name, [
                 'className' => Sheet::class,

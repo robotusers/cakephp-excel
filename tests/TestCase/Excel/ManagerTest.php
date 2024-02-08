@@ -27,6 +27,7 @@ namespace Robotusers\Excel\Test\TestCase\Excel;
 use Cake\Chronos\Chronos;
 use Cake\Chronos\Date;
 use Cake\Filesystem\File;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use LogicException;
@@ -48,8 +49,8 @@ use UnexpectedValueException;
 class ManagerTest extends TestCase
 {
     public $fixtures = [
-        'plugin.Robotusers/Excel.regular_columns',
-        'plugin.Robotusers/Excel.mapped_columns'
+        'plugin.Robotusers/Excel.RegularColumns',
+        'plugin.Robotusers/Excel.MappedColumns'
     ];
 
     public function testGetReaderXlsx()
@@ -61,12 +62,11 @@ class ManagerTest extends TestCase
         $this->assertInstanceOf(Xlsx2::class, $reader);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage File foo does not exist.
-     */
     public function testGetReaderMissingFile()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('File foo does not exist.');
+
         $manager = new Manager();
         $file = $this->createMock(File::class);
         $file->method('exists')
@@ -77,12 +77,11 @@ class ManagerTest extends TestCase
         $manager->getReader($file);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage File foo does not exist.
-     */
     public function testGetWriterMissingFile()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('File foo does not exist.');
+        
         $manager = new Manager();
         $file = $this->createMock(File::class);
         $excel = $this->createMock(Spreadsheet::class);
@@ -474,8 +473,8 @@ class ManagerTest extends TestCase
         $table->saveMany($entities);
         $this->assertCount(2, $table->find());
 
-        $table->eventManager()->on('Model.beforeFind', function ($e, $q) {
-            return $q->hydrate(false);
+        $table->getEventManager()->on('Model.beforeFind', function ($e, Query $q) {
+            return $q->disableHydration();
         });
 
         $manager->write($table, $worksheet);
@@ -638,7 +637,7 @@ class ManagerTest extends TestCase
             'propertyMap' => $map,
             'columnCallbacks' => [
                 'D' => function ($cell, $data) {
-                    $this->assertInternalType('array', $data);
+                    $this->assertEquals('array', gettype($data));
                     $cell->getStyle()->getNumberFormat()->setFormatCode('YYYY-MM-DD');
                 },
                 'E' => function ($cell) {
@@ -716,12 +715,11 @@ class ManagerTest extends TestCase
         $this->assertNull($worksheet->getCell('A2')->getValue());
     }
 
-    /**
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Cannot convert result to array.
-     */
     public function testWriteWithFinderAndInvalidRecord()
     {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Cannot convert result to array.');
+
         $manager = new Manager();
         $excel = new Spreadsheet();
         $worksheet = $excel->getSheet(0);
@@ -800,12 +798,11 @@ class ManagerTest extends TestCase
         $this->assertTrue($cellB->getStyle()->getFont()->getBold());
     }
 
-    /**
-     * @expectedException LogicException
-     * @expectedExceptionMessage Option `startRow` must be > 1 if you want to attach header.
-     */
     public function testWriteAndAttachHeaderInvalidStartRow()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Option `startRow` must be > 1 if you want to attach header.');
+
         $manager = new Manager();
         $excel = new Spreadsheet();
         $worksheet = $excel->getSheet(0);
