@@ -26,7 +26,6 @@
 namespace Robotusers\Excel\Model\Behavior;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Filesystem\File;
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
 use InvalidArgumentException;
@@ -35,6 +34,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Traits\DiscoverWorksheetTrait;
 use RuntimeException;
+use SplFileInfo;
 
 /**
  * Description of ExcelBehavior
@@ -68,7 +68,7 @@ class ExcelBehavior extends Behavior
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'startRow' => 1,
         'endRow' => null,
         'startColumn' => 'A',
@@ -164,7 +164,7 @@ class ExcelBehavior extends Behavior
         ]);
         $writer = $manager->getWriter($worksheet->getParent(), $file, $options);
 
-        $writer->save($file->pwd());
+        $writer->save($file->getRealPath());
 
         return $file;
     }
@@ -263,7 +263,7 @@ class ExcelBehavior extends Behavior
      * @param File $file
      * @return Table
      */
-    public function setFile(File $file)
+    public function setFile(SplFileInfo $file)
     {
         $this->file = $file;
 

@@ -26,7 +26,6 @@ namespace Robotusers\Excel\Test\TestCase\Excel;
 
 use Cake\Chronos\Chronos;
 use Cake\Chronos\Date;
-use Cake\Filesystem\File;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
@@ -40,6 +39,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Robotusers\Excel\Excel\Manager;
 use Robotusers\Excel\Test\TestCase;
 use UnexpectedValueException;
+use SplFileInfo;
 
 /**
  * Description of ManagerTest
@@ -68,10 +68,10 @@ class ManagerTest extends TestCase
         $this->expectExceptionMessage('File foo does not exist.');
 
         $manager = new Manager();
-        $file = $this->createMock(File::class);
-        $file->method('exists')
+        $file = $this->createMock(SplFileInfo::class);
+        $file->method('getSize')
             ->willReturn(false);
-        $file->method('name')
+        $file->method('getBasename')
             ->willReturn('foo');
 
         $manager->getReader($file);
@@ -83,11 +83,11 @@ class ManagerTest extends TestCase
         $this->expectExceptionMessage('File foo does not exist.');
         
         $manager = new Manager();
-        $file = $this->createMock(File::class);
+        $file = $this->createMock(SplFileInfo::class);
         $excel = $this->createMock(Spreadsheet::class);
-        $file->method('exists')
+        $file->method('getSize')
             ->willReturn(false);
-        $file->method('name')
+        $file->method('getBasename')
             ->willReturn('foo');
 
         $manager->getWriter($excel, $file);
@@ -763,7 +763,7 @@ class ManagerTest extends TestCase
 
         $writer->expects($this->once())
             ->method('save')
-            ->with($file->pwd());
+            ->with($file->getRealPath());
 
         $manager = new Manager();
 
