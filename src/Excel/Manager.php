@@ -26,7 +26,6 @@
 namespace Robotusers\Excel\Excel;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Filesystem\File;
 use Cake\ORM\Table;
 use DateTimeInterface;
 use InvalidArgumentException;
@@ -43,6 +42,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Csv as CsvWriter;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use UnexpectedValueException;
+use SplFileInfo;
 
 /**
  * Description of Manager
@@ -292,7 +292,7 @@ class Manager
      * @return Spreadsheet
      * @deprecated 0.5.0 Use `getSpreadsheet()` instead.
      */
-    public function getExcel(File $file, array $options = [])
+    public function getExcel(SplFileInfo $file, array $options = [])
     {
         return $this->getSpreadsheet($file, $options);
     }
@@ -302,11 +302,11 @@ class Manager
      * @param array $options
      * @return Spreadsheet
      */
-    public function getSpreadsheet(File $file, array $options = [])
+    public function getSpreadsheet(SplFileInfo $file, array $options = [])
     {
         $reader = $this->getReader($file, $options);
 
-        return $reader->load($file->pwd());
+        return $reader->load($file->getRealPath());
     }
 
     /**
@@ -316,14 +316,14 @@ class Manager
      * @return IReader
      * @throws InvalidArgumentException
      */
-    public function getReader(File $file, array $options = [])
+    public function getReader(SplFileInfo $file, array $options = [])
     {
-        if (!$file->exists()) {
-            $message = sprintf('File %s does not exist.', $file->name());
+        if (!$file->getSize()) {
+            $message = sprintf('File %s does not exist.', $file->getBasename());
             throw new InvalidArgumentException($message);
         }
 
-        $reader = IOFactory::createReaderForFile($file->pwd());
+        $reader = IOFactory::createReaderForFile($file->getRealPath());
 
         if ($reader instanceof CsvReader) {
             if (isset($options['delimiter'])) {
@@ -351,17 +351,17 @@ class Manager
      * @return IWriter
      * @throws InvalidArgumentException
      */
-    public function getWriter(Spreadsheet $excel, File $file, array $options = [])
+    public function getWriter(Spreadsheet $excel, SplFileInfo $file, array $options = [])
     {
-        if (!$file->exists()) {
-            $message = sprintf('File %s does not exist.', $file->name());
+        if (!$file->getSize()) {
+            $message = sprintf('File %s does not exist.', $file->getBasename());
             throw new InvalidArgumentException($message);
         }
 
         if (isset($options['writerType'])) {
             $type = $options['writerType'];
         } else {
-            $type = IOFactory::identify($file->pwd());
+            $type = IOFactory::identify($file->getRealPath());
         }
         $writer = IOFactory::createWriter($excel, $type);
 
@@ -393,7 +393,7 @@ class Manager
     public function save(Spreadsheet $excel, File $file, array $options = [])
     {
         $writer = $this->getWriter($excel, $file, $options);
-        $writer->save($file->pwd());
+        $writer->save($file->getRealPath());
 
         return $file;
     }
