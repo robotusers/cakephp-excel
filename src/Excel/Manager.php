@@ -353,7 +353,7 @@ class Manager
      */
     public function getWriter(Spreadsheet $excel, File $file, array $options = [])
     {
-        if (!$file->exists()) {
+        if (!$file->getSize()) {
             $message = sprintf('File %s does not exist.', $file->getBasename());
             throw new InvalidArgumentException($message);
         }
