@@ -351,7 +351,7 @@ class Manager
      * @return IWriter
      * @throws InvalidArgumentException
      */
-    public function getWriter(Spreadsheet $excel, File $file, array $options = [])
+    public function getWriter(Spreadsheet $excel, SplFileInfo $file, array $options = [])
     {
         if (!$file->getSize()) {
             $message = sprintf('File %s does not exist.', $file->getBasename());
